@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Application\Http\Providers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use StephBug\SecurityModel\Guard\Authentication\Authenticatable;
 use StephBug\SecurityModel\Guard\Authentication\AuthenticationManager;
@@ -13,15 +14,25 @@ use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorageAware;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
+use StephBug\SecurityModel\Guard\Authorization\Grantable;
+use StephBug\SecurityModel\Guard\Authorization\Hierarchy\RoleHierarchy;
+use StephBug\SecurityModel\Guard\Authorization\Strategy\AuthorizationStrategy;
 
 class SecurityServiceProvider extends ServiceProvider
 {
+    /**
+     * @var bool
+     */
+    protected $defer = true;
+
     public function boot(): void
     {
         $this->publishes(
             [$this->getConfigPath() => config_path('security.php')],
             'config'
         );
+
+        $this->registerAuthorizationServices();
     }
 
     public function register(): void
@@ -44,6 +55,37 @@ class SecurityServiceProvider extends ServiceProvider
         $this->app->bindIf(Authenticatable::class, AuthenticationManager::class);
     }
 
+    protected function registerAuthorizationServices(): void
+    {
+        $config = $this->app->make('config')->get('security.authorizer');
+
+        // Authorization checker
+        $this->app->bindIf(Grantable::class, array_get($config, 'grant'));
+
+        // Role hierarchy
+        if (!$this->app->bound(array_get($config, 'role_hierarchy.service', null))) {
+            $this->app->bind(RoleHierarchy::class, function () use ($config) {
+                $class = array_get($config, 'role_hierarchy.service');
+                $roles = array_get($config, 'role_hierarchy.roles');
+
+                return new $class($roles);
+            });
+        }
+
+        // Authorization strategy
+        $this->app->bindIf(AuthorizationStrategy::class, function (Application $app) use ($config) {
+            $class = array_get($config, 'strategy');
+
+            $voters = array_get($config, 'voters', []);
+            foreach ($voters as &$voter) {
+                $voter = $app->make($voter);
+            }
+
+            return new $class($voters);
+        });
+
+    }
+
     protected function mergeConfig(): void
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'security');
@@ -57,7 +99,8 @@ class SecurityServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [
-            TokenStorage::class, TrustResolver::class, AuthenticationProviderCollection::class, Authenticatable::class
+            TokenStorage::class, TrustResolver::class, AuthenticationProviderCollection::class, Authenticatable::class,
+            Grantable::class, RoleHierarchy::class, AuthorizationStrategy::class
         ];
     }
 }

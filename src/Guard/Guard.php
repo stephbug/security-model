@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard;
 
+use StephBug\SecurityModel\Application\Exception\CredentialsNotFound;
 use StephBug\SecurityModel\Guard\Authentication\Authenticatable;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
@@ -45,6 +46,15 @@ class Guard
     public function forget(): void
     {
         $this->tokenStorage->setToken(null);
+    }
+
+    public function requireToken(): Tokenable
+    {
+        if ($this->isStorageEmpty()) {
+            throw CredentialsNotFound::reason();
+        }
+
+        return $this->storage()->getToken();
     }
 
     public function isStorageEmpty(): bool
