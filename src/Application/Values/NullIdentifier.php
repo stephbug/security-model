@@ -6,8 +6,9 @@ namespace StephBug\SecurityModel\Application\Values;
 
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
+use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 
-class NullIdentifier implements SecurityIdentifier
+class NullIdentifier implements SecurityIdentifier, UserToken
 {
 
     /**
