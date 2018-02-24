@@ -22,7 +22,7 @@ class Authorization
     public function handle(Request $request, \Closure $next, ...$attributes)
     {
         if ($attributes) {
-            $this->authorizer->requireGranted($attributes);
+            $this->authorizer->requireGranted($attributes, $request);
         }
 
         return $next($request);

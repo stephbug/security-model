@@ -19,12 +19,12 @@ class Authorizer
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function grant(array $attributes, object $object = null): bool
+    public function grant(array $attributes, $object = null): bool
     {
-        return $this->authorizationChecker->isGranted($attributes, $object);
+        return $this->authorizationChecker->isGranted($attributes, $object ?? request());
     }
 
-    public function requireGranted(array $attributes, object $object = null): bool
+    public function requireGranted(array $attributes, $object = null): bool
     {
         if ($this->grant($attributes, $object)) {
             return true;

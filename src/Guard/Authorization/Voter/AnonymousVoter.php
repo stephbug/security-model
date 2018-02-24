@@ -19,12 +19,12 @@ class AnonymousVoter extends Voter
         $this->trustResolver = $trustResolver;
     }
 
-    protected function supports(string $attribute, object $subject): bool
+    protected function supports(string $attribute, $subject = null): bool
     {
         return 'anonymous' === $attribute;
     }
 
-    protected function voteOn(string $attribute, object $subject, Tokenable $token): bool
+    protected function voteOn(string $attribute, $subject = null, Tokenable $token): bool
     {
         return $this->trustResolver->isAnonymous($token);
     }

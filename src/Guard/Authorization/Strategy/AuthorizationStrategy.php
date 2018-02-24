@@ -8,5 +8,5 @@ use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 interface AuthorizationStrategy
 {
-    public function decide(Tokenable $token, array $attributes, object $object): bool;
+    public function decide(Tokenable $token, array $attributes, $object = null): bool;
 }

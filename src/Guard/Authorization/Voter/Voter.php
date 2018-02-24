@@ -8,7 +8,7 @@ use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 abstract class Voter extends AccessVoter
 {
-    public function vote(Tokenable $token, object $subject, array $attributes): int
+    public function vote(Tokenable $token, $subject = null, array $attributes): int
     {
         $vote = $this->abstain();
 

@@ -24,7 +24,7 @@ class UnanimousStrategy implements AuthorizationStrategy
         $this->voters = $voters;
     }
 
-    public function decide(Tokenable $token, array $attributes, object $object): bool
+    public function decide(Tokenable $token, array $attributes, $object = null): bool
     {
         $grant = 0;
 
