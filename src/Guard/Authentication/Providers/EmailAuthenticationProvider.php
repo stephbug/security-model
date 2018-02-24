@@ -6,6 +6,7 @@ namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
+use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\UserProvider;

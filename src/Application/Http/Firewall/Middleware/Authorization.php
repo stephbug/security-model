@@ -14,20 +14,16 @@ class Authorization
      */
     private $authorizer;
 
-    /**
-     * @var array
-     */
-    private $attributes;
-
-    public function __construct(Authorizer $authorizer, ...$attributes)
+    public function __construct(Authorizer $authorizer)
     {
         $this->authorizer = $authorizer;
-        $this->attributes = $attributes;
     }
 
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, \Closure $next, ...$attributes)
     {
-        $this->authorizer->requireGranted($this->attributes);
+        if ($attributes) {
+            $this->authorizer->requireGranted($attributes);
+        }
 
         return $next($request);
     }
