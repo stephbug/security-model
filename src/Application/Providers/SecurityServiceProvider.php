@@ -92,7 +92,7 @@ class SecurityServiceProvider extends ServiceProvider
 
     protected function getConfigPath(): string
     {
-        return __DIR__ . '/../../../../config/security.php';
+        return __DIR__ . '/../../../config/security.php';
     }
 
     public function provides(): array
