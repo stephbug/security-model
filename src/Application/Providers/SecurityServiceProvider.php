@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Http\Providers;
+namespace StephBug\SecurityModel\Application\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
