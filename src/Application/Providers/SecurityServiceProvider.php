@@ -52,7 +52,7 @@ class SecurityServiceProvider extends ServiceProvider
 
         $this->app->singleton(AuthenticationProviderCollection::class);
 
-        $this->app->bindIf(Authenticatable::class, AuthenticationManager::class);
+        $this->app->bind(Authenticatable::class, AuthenticationManager::class);
     }
 
     protected function registerAuthorizationServices(): void
@@ -60,7 +60,7 @@ class SecurityServiceProvider extends ServiceProvider
         $config = $this->app->make('config')->get('security.authorizer');
 
         // Authorization checker
-        $this->app->bindIf(Grantable::class, array_get($config, 'grant'));
+        $this->app->bind(Grantable::class, array_get($config, 'grant'));
 
         // Role hierarchy
         // need a flag configuration to bind it
@@ -72,7 +72,7 @@ class SecurityServiceProvider extends ServiceProvider
         });
 
         // Authorization strategy
-        $this->app->bindIf(AuthorizationStrategy::class, function (Application $app) use ($config) {
+        $this->app->bind(AuthorizationStrategy::class, function (Application $app) use ($config) {
             $class = array_get($config, 'strategy');
 
             $voters = array_get($config, 'voters', []);
@@ -82,7 +82,6 @@ class SecurityServiceProvider extends ServiceProvider
 
             return new $class($voters);
         });
-
     }
 
     protected function mergeConfig(): void
