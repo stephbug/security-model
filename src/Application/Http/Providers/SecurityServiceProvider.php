@@ -63,14 +63,13 @@ class SecurityServiceProvider extends ServiceProvider
         $this->app->bindIf(Grantable::class, array_get($config, 'grant'));
 
         // Role hierarchy
-        if (!$this->app->bound(array_get($config, 'role_hierarchy.service', null))) {
-            $this->app->bind(RoleHierarchy::class, function () use ($config) {
-                $class = array_get($config, 'role_hierarchy.service');
-                $roles = array_get($config, 'role_hierarchy.roles');
+        // need a flag configuration to bind it
+        $this->app->bind(RoleHierarchy::class, function () use ($config) {
+            $class = array_get($config, 'role_hierarchy.service');
+            $roles = array_get($config, 'role_hierarchy.roles');
 
-                return new $class($roles);
-            });
-        }
+            return new $class($roles, $config['role_prefix']);
+        });
 
         // Authorization strategy
         $this->app->bindIf(AuthorizationStrategy::class, function (Application $app) use ($config) {

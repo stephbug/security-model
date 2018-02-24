@@ -13,7 +13,7 @@ class RoleVoter extends AccessVoter
      */
     private $rolePrefix;
 
-    public function __construct(string $rolePrefix)
+    public function __construct(string $rolePrefix = 'ROLE_')
     {
         $this->rolePrefix = $rolePrefix;
     }

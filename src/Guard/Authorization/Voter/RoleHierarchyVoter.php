@@ -14,7 +14,7 @@ class RoleHierarchyVoter extends RoleVoter
      */
     private $roleHierarchy;
 
-    public function __construct(RoleHierarchy $roleHierarchy, string $rolePrefix)
+    public function __construct(RoleHierarchy $roleHierarchy, string $rolePrefix = 'ROLE_')
     {
         parent::__construct($rolePrefix);
 

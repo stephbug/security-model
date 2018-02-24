@@ -27,7 +27,7 @@ abstract class Voter extends AccessVoter
         return $vote;
     }
 
-    abstract protected function supports(string $attribute, object $subject): bool;
+    abstract protected function supports(string $attribute, $subject): bool;
 
-    abstract protected function voteOn(string $attribute, object $subject, Tokenable $token): bool;
+    abstract protected function voteOn(string $attribute, $subject, Tokenable $token): bool;
 }
