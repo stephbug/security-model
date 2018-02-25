@@ -5,28 +5,17 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use Illuminate\Contracts\Hashing\Hasher;
-use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
 use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
-use StephBug\SecurityModel\User\Exception\UserNotFound;
 use StephBug\SecurityModel\User\LocalUser;
 use StephBug\SecurityModel\User\UserChecker;
 use StephBug\SecurityModel\User\UserProvider;
+use StephBug\SecurityModel\User\UserSecurity;
 
-class IdentifierPasswordAuthenticationProvider implements AuthenticationProvider
+class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvider
 {
-    /**
-     * @var UserProvider
-     */
-    private $userProvider;
-
-    /**
-     * @var UserChecker
-     */
-    private $userChecker;
-
     /**
      * @var Hasher
      */
@@ -34,29 +23,12 @@ class IdentifierPasswordAuthenticationProvider implements AuthenticationProvider
 
     public function __construct(UserProvider $userProvider, UserChecker $userChecker, Hasher $encoder)
     {
-        $this->userProvider = $userProvider;
-        $this->userChecker = $userChecker;
+        parent::__construct($userProvider, $userChecker);
+
         $this->encoder = $encoder;
     }
 
-    public function authenticate(Tokenable $token): Tokenable
-    {
-        if (!$this->supports($token)) {
-            throw UnsupportedProvider::withSupport($token, $this);
-        }
-
-        $user = $this->retrieveUser($token);
-
-        try {
-            $this->checkUser($user, $token);
-
-            return $this->createAuthenticatedToken($user, $token);
-        } catch (BadCredentials $badCredentials) {
-            throw UserNotFound::hideBadCredentials($badCredentials);
-        }
-    }
-
-    private function retrieveUser(IdentifierPasswordToken $token): LocalUser
+    protected function retrieveUser(Tokenable $token): UserSecurity
     {
         if ($token->getUser() instanceof LocalUser) {
             return $token->getUser();
@@ -65,7 +37,7 @@ class IdentifierPasswordAuthenticationProvider implements AuthenticationProvider
         return $this->userProvider->requireByIdentifier($token->getIdentifier());
     }
 
-    private function checkUser(LocalUser $user, IdentifierPasswordToken $token): void
+    protected function checkUser(UserSecurity $user, Tokenable $token): void
     {
         $this->userChecker->onPreAuthentication($user);
 
@@ -95,24 +67,13 @@ class IdentifierPasswordAuthenticationProvider implements AuthenticationProvider
         }
     }
 
-    private function createAuthenticatedToken(LocalUser $user, IdentifierPasswordToken $token): IdentifierPasswordToken
+    protected function createAuthenticatedToken(UserSecurity $user, Tokenable $token): Tokenable
     {
         return new IdentifierPasswordToken(
             $user,
             $token->getCredentials(),
             $this->getRoles($user, $token)
         );
-    }
-
-    private function getRoles(LocalUser $user, IdentifierPasswordToken $token): array
-    {
-        $roles = $user->getRoles()->all();
-
-        foreach ($token->getRoles() as $role) {
-            // todo switch user role
-        }
-
-        return $roles;
     }
 
     public function supports(Tokenable $token): bool

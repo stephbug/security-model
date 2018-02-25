@@ -4,48 +4,36 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
-use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
-use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
-use StephBug\SecurityModel\User\UserProvider;
 use StephBug\SecurityModel\User\UserSecurity;
 
-class EmailAuthenticationProvider implements AuthenticationProvider
+class EmailAuthenticationProvider extends UserAuthenticationProvider
 {
-    /**
-     * @var UserProvider
-     */
-    private $userProvider;
-
-    public function __construct(UserProvider $userProvider)
+    protected function retrieveUser(Tokenable $token): UserSecurity
     {
-        $this->userProvider = $userProvider;
-    }
-
-    public function authenticate(Tokenable $token): Tokenable
-    {
-        if (!$this->supports($token)) {
-            throw UnsupportedProvider::withSupport($token, $this);
-        }
-
         $user = $token->getUser();
 
         if ($user instanceof UserSecurity) {
-            return $token;
+            return $user;
         }
 
-        return new EmailToken($this->requireUser($user), new EmptyCredentials());
+        return $this->userProvider->requireByIdentifier($token->getIdentifier());
+    }
+
+    protected function checkUser(UserSecurity $user, Tokenable $token): void
+    {
+        $this->userChecker->onPreAuthentication($user);
+    }
+
+    protected function createAuthenticatedToken(UserSecurity $user, Tokenable $token): Tokenable
+    {
+        return new EmailToken($user, new EmptyCredentials(), $this->getRoles($user, $token));
     }
 
     public function supports(Tokenable $token): bool
     {
         return $token instanceof EmailToken;
-    }
-
-    private function requireUser(SecurityIdentifier $identifier): UserSecurity
-    {
-        return $this->userProvider->requireByIdentifier($identifier);
     }
 }
