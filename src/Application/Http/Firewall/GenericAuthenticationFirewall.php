@@ -9,6 +9,7 @@ use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Http\Entrypoint\Entrypoint;
 use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Http\Response\AuthenticationSuccess;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Guard;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +37,11 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
     protected $entrypoint;
 
     /**
+     * @var SecurityKey
+     */
+    protected $securityKey;
+
+    /**
      * @var bool
      */
     protected $stateless;
@@ -44,12 +50,14 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
                                 AuthenticationRequest $authenticationRequest,
                                 AuthenticationSuccess $authenticationSuccess,
                                 Entrypoint $entrypoint,
+                                SecurityKey $securityKey,
                                 bool $stateless)
     {
         $this->guard = $guard;
         $this->authenticationRequest = $authenticationRequest;
         $this->authenticationSuccess = $authenticationSuccess;
         $this->entrypoint = $entrypoint;
+        $this->securityKey = $securityKey;
         $this->stateless = $stateless;
     }
 

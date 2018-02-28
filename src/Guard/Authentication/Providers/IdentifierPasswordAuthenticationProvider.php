@@ -6,6 +6,7 @@ namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use StephBug\SecurityModel\Application\Values\EmptyCredentials;
+use StephBug\SecurityModel\Application\Values\FirewallKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
@@ -21,9 +22,12 @@ class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvide
      */
     private $encoder;
 
-    public function __construct(UserProvider $userProvider, UserChecker $userChecker, Hasher $encoder)
+    public function __construct(UserProvider $userProvider,
+                                UserChecker $userChecker,
+                                FirewallKey $firewallKey,
+                                Hasher $encoder)
     {
-        parent::__construct($userProvider, $userChecker);
+        parent::__construct($userProvider, $userChecker, $firewallKey);
 
         $this->encoder = $encoder;
     }
@@ -78,6 +82,6 @@ class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvide
 
     public function supports(Tokenable $token): bool
     {
-        return $token instanceof IdentifierPasswordToken;
+        return $token instanceof IdentifierPasswordToken && $this->securityKey->sameValueAs($token->getSecurityKey());
     }
 }

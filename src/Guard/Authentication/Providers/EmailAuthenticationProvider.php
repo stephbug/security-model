@@ -29,11 +29,11 @@ class EmailAuthenticationProvider extends UserAuthenticationProvider
 
     protected function createAuthenticatedToken(UserSecurity $user, Tokenable $token): Tokenable
     {
-        return new EmailToken($user, new EmptyCredentials(), $this->getRoles($user, $token));
+        return new EmailToken($user, new EmptyCredentials(), $this->securityKey, $this->getRoles($user, $token));
     }
 
     public function supports(Tokenable $token): bool
     {
-        return $token instanceof EmailToken;
+        return $token instanceof EmailToken && $this->securityKey->sameValueAs($token->getSecurityKey());
     }
 }

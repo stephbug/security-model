@@ -9,19 +9,17 @@ use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 class AuthenticationManager implements Authenticatable
 {
     /**
-     * @var AuthenticationProviderCollection
+     * @var AuthenticationProviders
      */
     private $providers;
 
-    public function __construct(AuthenticationProviderCollection $providers)
+    public function __construct(AuthenticationProviders $providers)
     {
         $this->providers = $providers;
     }
 
     public function authenticate(Tokenable $token): Tokenable
     {
-        return $this->providers
-            ->firstSupportedProvider($token)
-            ->authenticate($token);
+        return $this->providers->firstSupportedProvider($token)->authenticate($token);
     }
 }

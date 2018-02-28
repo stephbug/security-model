@@ -7,6 +7,7 @@ namespace StephBug\SecurityModel\Guard;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Http\Event\UserLogin;
+use StephBug\SecurityModel\Application\Http\Event\UserLogout;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 class SecurityEvent
@@ -24,6 +25,11 @@ class SecurityEvent
     public function dispatchLoginEvent(Request $request, Tokenable $token): void
     {
         $this->eventDispatcher->dispatch(new UserLogin($request, $token));
+    }
+
+    public function dispatchLogoutEvent(Tokenable $token): void
+    {
+        $this->eventDispatcher->dispatch(new UserLogout($token));
     }
 
     /**

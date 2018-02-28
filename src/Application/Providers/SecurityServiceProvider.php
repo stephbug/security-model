@@ -8,7 +8,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use StephBug\SecurityModel\Guard\Authentication\Authenticatable;
 use StephBug\SecurityModel\Guard\Authentication\AuthenticationManager;
-use StephBug\SecurityModel\Guard\Authentication\AuthenticationProviderCollection;
+use StephBug\SecurityModel\Guard\Authentication\AuthenticationProviders;
 use StephBug\SecurityModel\Guard\Authentication\GenericTrustResolver;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
@@ -50,7 +50,7 @@ class SecurityServiceProvider extends ServiceProvider
             return new GenericTrustResolver(AnonymousToken::class);
         });
 
-        $this->app->singleton(AuthenticationProviderCollection::class);
+        $this->app->singleton(AuthenticationProviders::class);
 
         $this->app->bind(Authenticatable::class, AuthenticationManager::class);
     }
@@ -97,7 +97,7 @@ class SecurityServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [
-            TokenStorage::class, TrustResolver::class, AuthenticationProviderCollection::class, Authenticatable::class,
+            TokenStorage::class, TrustResolver::class, AuthenticationProviders::class, Authenticatable::class,
             Grantable::class, RoleHierarchy::class, AuthorizationStrategy::class
         ];
     }

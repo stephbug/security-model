@@ -9,7 +9,7 @@ use StephBug\SecurityModel\Guard\Authentication\Providers\AuthenticationProvider
 use StephBug\SecurityModel\Guard\Authentication\Providers\NullAuthenticationProvider;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
-class AuthenticationProviderCollection
+class AuthenticationProviders
 {
     /**
      * @var Collection

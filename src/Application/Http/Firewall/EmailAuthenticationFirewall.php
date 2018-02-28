@@ -15,6 +15,6 @@ class EmailAuthenticationFirewall extends GenericAuthenticationFirewall
     {
         $identifier = $this->authenticationRequest->extract($request);
 
-        return new EmailToken($identifier, new EmptyCredentials());
+        return new EmailToken($identifier, new EmptyCredentials(), $this->securityKey);
     }
 }

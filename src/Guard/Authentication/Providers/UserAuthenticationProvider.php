@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Application\Values\SwitchUserRole;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
@@ -25,10 +26,16 @@ abstract class UserAuthenticationProvider implements AuthenticationProvider
      */
     protected $userChecker;
 
-    public function __construct(UserProvider $userProvider, UserChecker $userChecker)
+    /**
+     * @var SecurityKey
+     */
+    protected $securityKey;
+
+    public function __construct(UserProvider $userProvider, UserChecker $userChecker, SecurityKey $securityKey)
     {
         $this->userProvider = $userProvider;
         $this->userChecker = $userChecker;
+        $this->securityKey = $securityKey;
     }
 
     public function authenticate(Tokenable $token): Tokenable

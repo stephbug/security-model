@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\User\UserSecurity;
 
 interface Tokenable
@@ -28,4 +29,6 @@ interface Tokenable
     public function isAuthenticated(): bool;
 
     public function getCredentials(): Credentials;
+
+    public function getSecurityKey(): SecurityKey;
 }

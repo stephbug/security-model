@@ -13,9 +13,15 @@ class GenericTrustResolver implements TrustResolver
      */
     private $anonymousToken;
 
-    public function __construct(string $anonymousToken)
+    /**
+     * @var string
+     */
+    private $rememberMe;
+
+    public function __construct(string $anonymousToken, string $rememberMe)
     {
         $this->anonymousToken = $anonymousToken;
+        $this->rememberMe = $rememberMe;
     }
 
     public function isAnonymous(Tokenable $token = null): bool
@@ -27,12 +33,21 @@ class GenericTrustResolver implements TrustResolver
         return $token instanceof $this->anonymousToken;
     }
 
+    public function isRememberMe(Tokenable $token = null): bool
+    {
+        if (!$token) {
+            return false;
+        }
+
+        return $token instanceof $this->rememberMe;
+    }
+
     public function isFullyAuthenticated(Tokenable $token = null): bool
     {
         if (!$token) {
             return false;
         }
 
-        return !$this->isAnonymous($token);
+        return !$this->isAnonymous($token) && !$this->isRememberMe($token);
     }
 }

@@ -14,6 +14,6 @@ class IdentifierPasswordAuthenticationFirewall extends GenericAuthenticationFire
     {
         [$identifier, $credential] = $this->authenticationRequest->extract($request);
 
-        return new IdentifierPasswordToken($identifier, $credential);
+        return new IdentifierPasswordToken($identifier, $credential, $this->securityKey);
     }
 }

@@ -6,22 +6,33 @@ namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
 use StephBug\SecurityModel\Application\Values\AnonymousIdentifier;
+use StephBug\SecurityModel\Application\Values\AnonymousKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 class AnonymousAuthenticationProvider implements AuthenticationProvider
 {
+    /**
+     * @var AnonymousKey
+     */
+    private $anonymousKey;
+
+    public function __construct(AnonymousKey $anonymousKey)
+    {
+        $this->anonymousKey = $anonymousKey;
+    }
+
     public function authenticate(Tokenable $token): Tokenable
     {
         if (!$this->supports($token)) {
             throw UnsupportedProvider::withSupport($token, $this);
         }
 
-        return new AnonymousToken(new AnonymousIdentifier());
+        return new AnonymousToken(new AnonymousIdentifier(), $this->anonymousKey);
     }
 
     public function supports(Tokenable $token): bool
     {
-        return $token instanceof AnonymousToken;
+        return $token instanceof AnonymousToken && $token->getKey()->sameValueAs($this->anonymousKey);
     }
 }
