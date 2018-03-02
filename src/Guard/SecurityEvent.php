@@ -37,7 +37,7 @@ class SecurityEvent
      *
      * @return array|null
      */
-    public function dispatchEvent(object $event)
+    public function dispatchEvent($event)
     {
         return $this->eventDispatcher->dispatch($event);
     }
