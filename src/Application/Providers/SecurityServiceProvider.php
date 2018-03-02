@@ -11,6 +11,7 @@ use StephBug\SecurityModel\Guard\Authentication\AuthenticationManager;
 use StephBug\SecurityModel\Guard\Authentication\AuthenticationProviders;
 use StephBug\SecurityModel\Guard\Authentication\GenericTrustResolver;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
+use StephBug\SecurityModel\Guard\Authentication\Token\RecallerToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorageAware;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
@@ -47,7 +48,7 @@ class SecurityServiceProvider extends ServiceProvider
         $this->app->singleton(TokenStorage::class, TokenStorageAware::class);
 
         $this->app->bind(TrustResolver::class, function () {
-            return new GenericTrustResolver(AnonymousToken::class);
+            return new GenericTrustResolver(AnonymousToken::class, RecallerToken::class);
         });
 
         $this->app->singleton(AuthenticationProviders::class);
