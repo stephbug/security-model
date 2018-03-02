@@ -33,6 +33,6 @@ class AnonymousAuthenticationProvider implements AuthenticationProvider
 
     public function supports(Tokenable $token): bool
     {
-        return $token instanceof AnonymousToken && $token->getKey()->sameValueAs($this->anonymousKey);
+        return $token instanceof AnonymousToken && $token->getSecurityKey()->sameValueAs($this->anonymousKey);
     }
 }
