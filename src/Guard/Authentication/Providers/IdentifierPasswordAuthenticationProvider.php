@@ -76,6 +76,7 @@ class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvide
         return new IdentifierPasswordToken(
             $user,
             $token->getCredentials(),
+            $this->securityKey,
             $this->getRoles($user, $token)
         );
     }
