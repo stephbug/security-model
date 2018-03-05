@@ -19,7 +19,7 @@ abstract class Voter extends AccessVoter
 
             $vote = $this->deny();
 
-            if ($this->voteOn($attribute, $subject, $token)) {
+            if ($this->voteOn($attribute, $token, $subject)) {
                 return $this->grant();
             }
         }
