@@ -12,5 +12,5 @@ interface Votable
     const ACCESS_ABSTAIN = 0;
     const ACCESS_DENIED = -1;
 
-    public function vote(Tokenable $token, $subject = null, array $attributes): int;
+    public function vote(Tokenable $token, array $attributes, $subject = null): int;
 }

@@ -18,7 +18,7 @@ class RoleVoter extends AccessVoter
         $this->rolePrefix = $rolePrefix;
     }
 
-    public function vote(Tokenable $token, $subject = null, array $attributes): int
+    public function vote(Tokenable $token, array $attributes, $subject = null): int
     {
         $vote = $this->abstain();
         $roles = $this->extractRoles($token);

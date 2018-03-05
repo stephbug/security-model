@@ -10,18 +10,26 @@ use StephBug\SecurityModel\Role\Exception\AuthorizationDenied;
 class Authorizer
 {
     /**
+     * @var Guard
+     */
+    private $guard;
+
+    /**
      * @var Grantable
      */
     private $authorizationChecker;
 
-    public function __construct(Grantable $authorizationChecker)
+    public function __construct(Guard $guard, Grantable $authorizationChecker)
     {
+        $this->guard = $guard;
         $this->authorizationChecker = $authorizationChecker;
     }
 
     public function grant(array $attributes, $object = null): bool
     {
-        return $this->authorizationChecker->isGranted($attributes, $object ?? request());
+        $token = $this->guard->requireToken();
+
+        return $this->authorizationChecker->isGranted($token, $attributes, $object ?? request());
     }
 
     public function requireGranted(array $attributes, $object = null): bool

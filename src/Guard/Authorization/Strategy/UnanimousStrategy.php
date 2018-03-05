@@ -30,7 +30,7 @@ class UnanimousStrategy implements AuthorizationStrategy
 
         foreach ($attributes as $attribute) {
             foreach ($this->voters as $voter) {
-                $decision = $voter->vote($token, $object, [$attribute]);
+                $decision = $voter->vote($token, [$attribute], $object);
 
                 switch ($decision) {
                     case Votable::ACCESS_GRANTED:

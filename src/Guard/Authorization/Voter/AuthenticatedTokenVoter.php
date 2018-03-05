@@ -23,7 +23,7 @@ class AuthenticatedTokenVoter extends AccessVoter
         $this->trustResolver = $trustResolver;
     }
 
-    public function vote(Tokenable $token, $subject = null, array $attributes): int
+    public function vote(Tokenable $token, array $attributes, $subject = null): int
     {
         $vote = $this->abstain();
 

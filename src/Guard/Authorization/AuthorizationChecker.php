@@ -33,9 +33,9 @@ class AuthorizationChecker implements Grantable
         $this->strategy = $strategy;
     }
 
-    public function isGranted(array $attributes = null, $object = null): bool
+    public function isGranted(Tokenable $token, array $attributes, $object = null): bool
     {
-        $token = $this->requireAuthentication($this->guard->requireToken());
+        $token = $this->requireAuthentication($token);
 
         return $this->strategy->decide($token, $attributes ?? [], $object);
     }
