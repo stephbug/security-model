@@ -51,8 +51,12 @@ class ContextFirewall
     {
         $token = unserialize($tokenString, [Tokenable::class]);
 
-        $token instanceof Tokenable
-            ? $this->guard->put($this->userProviders->refreshUser($token))
-            : $this->guard->forget();
+        $this->guard->forget();
+
+        if ($token instanceof Tokenable) {
+            if ($token = $this->userProviders->refreshUser($token)) {
+                $this->guard->put($token);
+            }
+        }
     }
 }
