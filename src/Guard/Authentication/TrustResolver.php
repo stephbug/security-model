@@ -10,5 +10,7 @@ interface TrustResolver
 {
     public function isAnonymous(Tokenable $token = null): bool;
 
+    public function isRememberMe(Tokenable $token = null): bool;
+
     public function isFullyAuthenticated(Tokenable $token = null): bool;
 }

@@ -12,7 +12,7 @@ class NullIdentifier implements SecurityIdentifier, UserToken
 {
 
     /**
-     * @return mixed
+     * @return null
      */
     public function identify()
     {

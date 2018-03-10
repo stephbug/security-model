@@ -42,7 +42,7 @@ class RecallerAuthenticationProvider implements AuthenticationProvider
             throw UnsupportedProvider::withSupport($token, $this);
         }
 
-        if ($token->getRecalleKey()->sameValueAs($this->recallerKey)) {
+        if (!$token->getRecalleKey()->sameValueAs($this->recallerKey)) {
             throw BadCredentials::invalid($token->getRecallerKey());
         }
 

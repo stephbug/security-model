@@ -28,7 +28,7 @@ abstract class Token implements Tokenable
 
     public function __construct(array $roles = [])
     {
-        $this->roles = new Collection($roles ?? []);
+        $this->roles = new Collection($roles);
     }
 
     public function getRoles(): Collection

@@ -6,5 +6,5 @@ namespace StephBug\SecurityModel\Guard\Authorization\Hierarchy;
 
 interface RoleHierarchy
 {
-    public function getReachableRoles(array $roles);
+    public function getReachableRoles(array $roles): array;
 }

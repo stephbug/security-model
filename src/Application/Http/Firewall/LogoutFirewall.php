@@ -72,6 +72,7 @@ class LogoutFirewall extends AuthenticationFirewall
         if ($this->guard->isStorageEmpty()) {
             return false;
         }
+
         if ($this->trustResolver->isAnonymous($this->guard->storage()->getToken())) {
             return false;
         }
