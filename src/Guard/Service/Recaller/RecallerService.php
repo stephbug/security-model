@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Service\Recaller;
 
+use Illuminate\Contracts\Cookie\QueueingFactory;
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Exception\CookieTheft;
@@ -17,9 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class RecallerService implements Recallable, Logout
 {
     /**
-     * @var CookieHandler
+     * @var QueueingFactory
      */
-    protected $handler;
+    private $cookie;
+
+    /**
+     * @var CookieEncoder
+     */
+    protected $cookieEncoder;
 
     /**
      * @var UserRecallerProvider
@@ -36,12 +42,14 @@ abstract class RecallerService implements Recallable, Logout
      */
     protected $firewallKey;
 
-    public function __construct(CookieHandler $handler,
+    public function __construct(QueueingFactory $cookie,
+                                CookieEncoder $cookieEncoder,
                                 UserRecallerProvider $provider,
                                 RecallerKey $recallerKey,
                                 FirewallKey $firewallKey)
     {
-        $this->handler = $handler;
+        $this->cookie = $cookie;
+        $this->cookieEncoder = $cookieEncoder;
         $this->provider = $provider;
         $this->recallerKey = $recallerKey;
         $this->firewallKey = $firewallKey;
@@ -49,15 +57,15 @@ abstract class RecallerService implements Recallable, Logout
 
     public function autoLogin(Request $request): ?Tokenable
     {
-        if ($recaller = $this->handler->getRecaller($request)) {
+        if ($recaller = $this->getRecaller($request)) {
             try {
                 return $this->processAutoLogin($recaller, $request);
             } catch (CookieTheft $cookieTheft) {
-                $this->handler->cancel($request);
+                $this->cancelCookie($request);
 
                 throw new CookieTheft('Wrong cookie');
             } catch (AuthenticationException $exception) {
-                $this->handler->cancel($request);
+                $this->cancelCookie($request);
 
                 return null;
             }
@@ -68,12 +76,12 @@ abstract class RecallerService implements Recallable, Logout
 
     public function loginFail(Request $request): void
     {
-        $this->handler->cancel($request);
+        $this->cancelCookie($request);
     }
 
     public function loginSuccess(Request $request, Response $response, Tokenable $token): void
     {
-        $this->handler->cancel($request);
+        $this->cancelCookie($request);
 
         if (!$token->getUser() instanceof UserSecurity) {
             return;
@@ -88,7 +96,7 @@ abstract class RecallerService implements Recallable, Logout
 
     public function logout(Request $request, Response $response, Tokenable $token): void
     {
-        $this->handler->cancel($request);
+        $this->cancelCookie($request);
     }
 
     protected function isRecallerRequested(Request $request): bool
@@ -104,21 +112,46 @@ abstract class RecallerService implements Recallable, Logout
         );
     }
 
-    protected function hashValues(array $values): string
+    public function getCookieName(): string
     {
-        return $this->handler->getCookieSecurity()->generateCookieHash($values);
+        return '_security_remember-me_' . $this->firewallKey->value();
     }
 
-    protected function checkHash(array $values, string $hash): bool
+    protected function cancelCookie(Request $request): void
     {
-        if ($this->handler->getCookieSecurity()->compareCookieHash($values, $hash)) {
-            return true;
+        if ($this->getRecaller($request)) {
+            $this->cookie->queue(
+                $this->cookie->forget($this->getCookieName())
+            );
+        };
+    }
+
+    protected function queueCookie(array $values): void
+    {
+        array_merge($values, [$this->cookieEncoder->generateCookieHash($values)]);
+
+        $value = $this->cookieEncoder->encodeCookie(implode(Recaller::DELIMITER, $values));
+
+        $this->cookie->queue($this->cookie->forever($this->getCookieName(), $value));
+    }
+
+    protected function getRecaller(Request $request): ?RecallerValue
+    {
+        if (!$recaller = $request->cookie($this->getCookieName())) {
+            return null;
         }
 
-        throw new AuthenticationException('Invalid cookie hash');
+        $recaller = $this->cookieEncoder->decodeCookie($recaller);
+
+        $recaller = new Recaller($recaller);
+        if ($recaller->valid()) {
+            return $recaller;
+        }
+
+        throw new AuthenticationException('Invalid recaller');
     }
 
-    abstract public function processAutoLogin(Recaller $recaller, Request $request): Tokenable;
+    abstract public function processAutoLogin(RecallerValue $recaller, Request $request): Tokenable;
 
     abstract public function onLoginSuccess(Request $request, Response $response, Tokenable $token): void;
 }

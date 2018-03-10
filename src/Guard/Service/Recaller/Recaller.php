@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Service\Recaller;
 
-class Recaller
+class Recaller implements RecallerValue
 {
     const DELIMITER = '|';
 

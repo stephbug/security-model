@@ -6,7 +6,7 @@ namespace StephBug\SecurityModel\Guard\Service\Recaller;
 
 use StephBug\SecurityModel\Application\Values\RecallerKey;
 
-class CookieSecurity
+class CookieSecurity implements CookieEncoder
 {
     /**
      * @var string
