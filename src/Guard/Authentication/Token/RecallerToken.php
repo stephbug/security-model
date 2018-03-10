@@ -25,13 +25,13 @@ class RecallerToken extends Token
 
     public function __construct(UserSecurity $user, FirewallKey $firewallKey, RecallerKey $recallerKey)
     {
-        parent::__construct($roles = $user->getRoles()->all());
+        parent::__construct();
 
         $this->setUser($user);
         $this->firewallKey = $firewallKey;
         $this->recallerKey = $recallerKey;
 
-        count($roles) > 0 and $this->setAuthenticated(true);
+        $this->setAuthenticated(true);
     }
 
     public function getCredentials(): Credentials
