@@ -44,7 +44,7 @@ class SimpleRecallerService extends RecallerService
     {
         $user = $this->provider->requireByRecallerToken($token);
 
-        if (!$user->getId()->identify() !== $id) {
+        if ($user->getId()->identify() !== $id) {
             throw new CookieTheft('Wrong user identifier for recaller token');
         }
 
