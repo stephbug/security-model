@@ -12,6 +12,7 @@ use StephBug\SecurityModel\Application\Http\Response\AuthenticationSuccess;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Service\Recaller\Recallable;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
@@ -45,6 +46,11 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
      * @var bool
      */
     protected $stateless;
+
+    /**
+     * @var null|Recallable
+     */
+    protected $recallerService;
 
     public function __construct(Guard $guard,
                                 AuthenticationRequest $authenticationRequest,
@@ -83,7 +89,13 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
             $this->guard->event()->dispatchLoginEvent($request, $token);
         }
 
-        return $this->authenticationSuccess->onAuthenticationSuccess($request, $token);
+        $response = $this->authenticationSuccess->onAuthenticationSuccess($request, $token);
+
+        if ($this->recallerService) {
+            $this->recallerService->loginSuccess($request, $response, $token);
+        }
+
+        return $response;
     }
 
     protected function requireAuthentication(Request $request): bool
@@ -93,5 +105,10 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
         }
 
         return $this->authenticationRequest->matches($request);
+    }
+
+    public function setRecaller(Recallable $recallerService): void
+    {
+        $this->recallerService = $recallerService;
     }
 }
