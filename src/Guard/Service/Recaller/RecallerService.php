@@ -57,21 +57,21 @@ abstract class RecallerService implements Recallable, Logout
 
     public function autoLogin(Request $request): ?Tokenable
     {
-        if ($recaller = $this->getRecaller($request)) {
-            try {
-                return $this->processAutoLogin($recaller, $request);
-            } catch (CookieTheft $cookieTheft) {
-                $this->cancelCookie($request);
-
-                throw new CookieTheft('Wrong cookie');
-            } catch (AuthenticationException $exception) {
-                $this->cancelCookie($request);
-
+        try {
+            if (!$recaller = $this->getRecaller($request)) {
                 return null;
             }
-        }
 
-        return null;
+            return $this->processAutoLogin($recaller, $request);
+        } catch (CookieTheft $cookieTheft) {
+            $this->cancelCookie($request);
+
+            throw new CookieTheft('Wrong cookie');
+        } catch (AuthenticationException $exception) {
+            $this->cancelCookie($request);
+
+            return null;
+        }
     }
 
     public function loginFail(Request $request): void
