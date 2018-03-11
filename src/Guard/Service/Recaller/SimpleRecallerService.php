@@ -16,7 +16,7 @@ class SimpleRecallerService extends RecallerService
 {
     public function processAutoLogin(RecallerValue $recaller, Request $request): Tokenable
     {
-        if ($this->cookieEncoder->compareCookieHash([$recaller->id(), $recaller->token()], $recaller->hash())) {
+        if (!$this->cookieEncoder->compareCookieHash([$recaller->id(), $recaller->token()], $recaller->hash())) {
             throw new AuthenticationException('Invalid cookie hash');
         }
 
