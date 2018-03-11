@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Application\Exception;
 
-use StephBug\SecurityModel\Guard\Authentication\Providers\Authenticatable;
+use StephBug\SecurityModel\Guard\Authentication\Authenticatable;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 class UnsupportedProvider extends AuthenticationServiceException

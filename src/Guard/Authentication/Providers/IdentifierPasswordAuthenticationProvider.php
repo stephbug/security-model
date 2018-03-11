@@ -6,7 +6,7 @@ namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use StephBug\SecurityModel\Application\Values\EmptyCredentials;
-use StephBug\SecurityModel\Application\Values\FirewallKey;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
@@ -24,7 +24,7 @@ class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvide
 
     public function __construct(UserProvider $userProvider,
                                 UserChecker $userChecker,
-                                FirewallKey $firewallKey,
+                                SecurityKey $firewallKey,
                                 Hasher $encoder)
     {
         parent::__construct($userProvider, $userChecker, $firewallKey);
