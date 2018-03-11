@@ -66,9 +66,13 @@ abstract class RecallerService implements Recallable, Logout
         } catch (CookieTheft $cookieTheft) {
             $this->cancelCookie($request);
 
+            logger($cookieTheft->getMessage());
+
             throw new CookieTheft('Wrong cookie');
         } catch (AuthenticationException $exception) {
             $this->cancelCookie($request);
+
+            logger($exception->getMessage());
 
             return null;
         }
@@ -126,7 +130,7 @@ abstract class RecallerService implements Recallable, Logout
 
     protected function queueCookie(array $values): void
     {
-        array_merge($values, [$this->cookieEncoder->generateCookieHash($values)]);
+        $values = array_merge($values, [$this->cookieEncoder->generateCookieHash($values)]);
 
         $value = $this->cookieEncoder->encodeCookie(implode(Recaller::DELIMITER, $values));
 
