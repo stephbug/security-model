@@ -119,11 +119,9 @@ abstract class RecallerService implements Recallable, Logout
 
     protected function cancelCookie(Request $request): void
     {
-        if ($this->getRecaller($request)) {
-            $this->cookie->queue(
-                $this->cookie->forget($this->getCookieName())
-            );
-        };
+        $this->cookie->queue(
+            $this->cookie->forget($this->getCookieName())
+        );
     }
 
     protected function queueCookie(array $values): void
