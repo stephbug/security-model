@@ -9,7 +9,7 @@ use StephBug\SecurityModel\Application\Values\ClearPassword;
 use StephBug\SecurityModel\Application\Values\EmailAddress;
 use Symfony\Component\HttpFoundation\Request;
 
-class HtpBasicAuthenticationRequest implements AuthenticationRequest
+class HttpBasicAuthenticationRequest implements AuthenticationRequest
 {
     public function extract(IlluminateRequest $request): array
     {
