@@ -89,7 +89,7 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
                 return false;
             }
 
-            return $this->isAlreadyAuthenticated($identifier, $this->guard->storage()->getToken());
+            return !$this->isAlreadyAuthenticated($identifier, $this->guard->storage()->getToken());
         } catch (SecurityValueFailed $exception) {
             return false;
         }
