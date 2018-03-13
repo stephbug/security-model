@@ -57,7 +57,7 @@ class LogoutFirewall extends AuthenticationFirewall
         $token = $this->guard->requireToken();
 
         foreach($this->logoutHandlers as $handler){
-            $handler->processLogout($request, $response, $token);
+            $handler->logout($request, $response, $token);
         }
 
         $this->guard->forget();
