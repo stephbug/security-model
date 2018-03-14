@@ -13,13 +13,25 @@ class AuthenticationManager implements Authenticatable
      */
     private $providers;
 
-    public function __construct(AuthenticationProviders $providers)
+    /**
+     * @var bool
+     */
+    private $eraseCredentials;
+
+    public function __construct(AuthenticationProviders $providers, bool $eraseCredentials = true)
     {
         $this->providers = $providers;
+        $this->eraseCredentials = $eraseCredentials;
     }
 
     public function authenticate(Tokenable $token): Tokenable
     {
-        return $this->providers->firstSupportedProvider($token)->authenticate($token);
+        $token = $this->providers->firstSupportedProvider($token)->authenticate($token);
+
+        if ($this->eraseCredentials) {
+            $token->eraseCredentials();
+        }
+
+        return $token;
     }
 }

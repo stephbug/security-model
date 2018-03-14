@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication\Token;
 
-use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
@@ -13,7 +12,7 @@ use StephBug\SecurityModel\User\UserSecurity;
 
 interface Tokenable extends \Serializable
 {
-    public function getRoles(): Collection;
+    public function getRoles(): array;
 
     public function setUser(UserToken $user): void;
 
@@ -31,6 +30,8 @@ interface Tokenable extends \Serializable
     public function getCredentials(): Credentials;
 
     public function getSecurityKey(): SecurityKey;
+
+    public function eraseCredentials(): void;
 
     public function setAttribute(string $attribute, $value): void;
 

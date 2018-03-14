@@ -9,4 +9,6 @@ use StephBug\SecurityModel\Application\Values\Contract\EncodedPassword;
 interface LocalUser extends UserSecurity
 {
     public function getPassword(): EncodedPassword;
+
+    public function eraseCredentials(): void;
 }

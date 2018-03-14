@@ -13,9 +13,10 @@ use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasAttributes;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasRoles;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasSerializer;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasUserChanged;
+use StephBug\SecurityModel\User\LocalUser;
 use StephBug\SecurityModel\User\UserSecurity;
 
-abstract class Token implements Tokenable,Arrayable, Jsonable, JsonSerializable
+abstract class Token implements Tokenable, Arrayable, Jsonable, JsonSerializable
 {
     use HasRoles, HasUserChanged, HasAttributes, HasSerializer;
 
@@ -56,5 +57,12 @@ abstract class Token implements Tokenable,Arrayable, Jsonable, JsonSerializable
     public function setAuthenticated(bool $authenticated): void
     {
         $this->authenticated = $authenticated;
+    }
+
+    public function eraseCredentials(): void
+    {
+        if ($this->getUser() instanceof LocalUser) {
+            $this->getUser()->eraseCredentials();
+        }
     }
 }

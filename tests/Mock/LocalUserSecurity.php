@@ -14,4 +14,9 @@ class LocalUserSecurity extends UserSecurity implements LocalUser
     {
         return new BcryptPassword(bcrypt('foobar'));
     }
+
+    public function eraseCredentials(): void
+    {
+
+    }
 }

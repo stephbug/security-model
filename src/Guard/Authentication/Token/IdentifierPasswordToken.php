@@ -6,6 +6,7 @@ namespace StephBug\SecurityModel\Guard\Authentication\Token;
 
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
+use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 
 class IdentifierPasswordToken extends Token
@@ -41,12 +42,15 @@ class IdentifierPasswordToken extends Token
         return $this->securityKey;
     }
 
+    public function eraseCredentials(): void
+    {
+        parent::eraseCredentials();
+
+        $this->credentials = new EmptyCredentials();
+    }
+
     public function serialize(): string
     {
-        /**
-         * check with eraseCredentials not set
-         * an EmptyCredentials should be set here
-         */
         return serialize([$this->credentials, $this->securityKey, parent::serialize()]);
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Token\Concerns;
 
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
+use StephBug\SecurityModel\User\UserSecurity;
 
 trait HasSerializer
 {
@@ -26,7 +27,7 @@ trait HasSerializer
     public function toArray(): array
     {
         return [
-            is_object($this->user) ? clone $this->user : $this->user,
+            $this->transformUser(),
             $this->authenticated,
             array_map(function ($role) {return clone $role;}, $this->roles),
             $this->attributes
@@ -52,5 +53,10 @@ trait HasSerializer
     public function __toString()
     {
         return $this->toJson();
+    }
+
+    protected function transformUser(): UserSecurity
+    {
+        return clone $this->user;
     }
 }
