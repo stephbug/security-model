@@ -11,7 +11,7 @@ use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\User\UserSecurity;
 
-interface Tokenable
+interface Tokenable extends \Serializable
 {
     public function getRoles(): Collection;
 
