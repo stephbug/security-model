@@ -10,7 +10,7 @@ trait HasSerializer
 {
     public function serialize(): string
     {
-        return serialize($this->toJson());
+        return serialize($this->toArray());
     }
 
     public function unserialize($serialized)

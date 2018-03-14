@@ -41,11 +41,15 @@ class IdentifierPasswordToken extends Token
         return $this->securityKey;
     }
 
-    public function toArray(): array
+    public function serialize(): string
     {
-        return array_merge(
-            [$this->credentials->credentials(), $this->securityKey->value()],
-            parent::toArray()
-        );
+        return serialize([$this->credentials, $this->securityKey, parent::serialize()]);
+    }
+
+    public function unserialize($serialized)
+    {
+        [$this->credentials, $this->securityKey, $parentStr] = unserialize($serialized, [Tokenable::class]);
+
+        parent::unserialize($parentStr);
     }
 }
