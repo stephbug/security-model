@@ -31,4 +31,14 @@ interface Tokenable
     public function getCredentials(): Credentials;
 
     public function getSecurityKey(): SecurityKey;
+
+    public function setAttribute(string $attribute, $value): void;
+
+    public function getAttribute(string $attribute, $default = null);
+
+    public function hasAttribute(string $attribute): bool;
+
+    public function forgetAttribute(string $attribute): bool;
+
+    public function getAttributes(): iterable;
 }

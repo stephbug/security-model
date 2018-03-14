@@ -40,4 +40,12 @@ class IdentifierPasswordToken extends Token
     {
         return $this->securityKey;
     }
+
+    public function toArray(): array
+    {
+        return array_merge(
+            [$this->credentials->credentials(), $this->securityKey->value()],
+            parent::toArray()
+        );
+    }
 }

@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication\Token;
 
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+use JsonSerializable;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
+use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasAttributes;
+use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasRoles;
+use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasSerializer;
+use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasUserChanged;
 use StephBug\SecurityModel\User\UserSecurity;
 
-abstract class Token implements Tokenable
+abstract class Token implements Tokenable,Arrayable, Jsonable, JsonSerializable
 {
-    /**
-     * @var Collection
-     */
-    private $roles;
+    use HasRoles, HasUserChanged, HasAttributes, HasSerializer;
 
     /**
      * @var UserToken|SecurityIdentifier|UserSecurity
@@ -26,19 +29,9 @@ abstract class Token implements Tokenable
      */
     private $authenticated = false;
 
-    public function __construct(array $roles = [])
-    {
-        $this->roles = new Collection($roles);
-    }
-
-    public function getRoles(): Collection
-    {
-        return $this->roles;
-    }
-
     public function setUser(UserToken $user): void
     {
-        $this->user = $user;
+        $this->user = $this->requireSupportedUser($user);
     }
 
     public function getUser(): UserToken
