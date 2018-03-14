@@ -40,4 +40,16 @@ class EmailToken extends Token
     {
         return $this->securityKey;
     }
+
+    public function serialize(): string
+    {
+        return serialize([$this->securityKey, parent::serialize()]);
+    }
+
+    public function unserialize($serialized)
+    {
+        [$this->securityKey, $parentStr] = unserialize($serialized, [Tokenable::class]);
+
+        parent::unserialize($parentStr);
+    }
 }

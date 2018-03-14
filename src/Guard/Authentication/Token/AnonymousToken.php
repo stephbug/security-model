@@ -36,4 +36,16 @@ class AnonymousToken extends Token
     {
         return $this->anonymousKey;
     }
+
+    public function serialize(): string
+    {
+        return serialize([$this->anonymousKey, parent::serialize()]);
+    }
+
+    public function unserialize($serialized)
+    {
+        [$this->anonymousKey, $parentStr] = unserialize($serialized, [Tokenable::class]);
+
+        parent::unserialize($parentStr);
+    }
 }
