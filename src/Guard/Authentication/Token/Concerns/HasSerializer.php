@@ -28,9 +28,7 @@ trait HasSerializer
         return [
             is_object($this->user) ? clone $this->user : $this->user,
             $this->authenticated,
-            array_map(function ($role) {
-                return clone $role;
-            }, $this->roles->toArray()),
+            array_map(function ($role) {return clone $role;}, $this->roles),
             $this->attributes
         ];
     }

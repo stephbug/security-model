@@ -2,18 +2,17 @@
 
 namespace StephBug\SecurityModel\Guard\Authentication\Token\Concerns;
 
-use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Values\RoleValue;
 use StephBug\SecurityModel\Role\RoleSecurity;
 
 trait HasRoles
 {
     /**
-     * @var Collection
+     * @var array
      */
     private $roles;
 
-    public function __construct(iterable $roles = [])
+    public function __construct(array $roles = [])
     {
         foreach ($roles as &$role) {
             if (is_string($role)) {
@@ -25,10 +24,10 @@ trait HasRoles
             }
         }
 
-        $this->roles = new Collection($roles);
+        $this->roles = $roles;
     }
 
-    public function getRoles(): Collection
+    public function getRoles(): array
     {
         return $this->roles;
     }

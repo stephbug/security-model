@@ -43,6 +43,10 @@ class IdentifierPasswordToken extends Token
 
     public function serialize(): string
     {
+        /**
+         * check with eraseCredentials not set
+         * an EmptyCredentials should be set here
+         */
         return serialize([$this->credentials, $this->securityKey, parent::serialize()]);
     }
 
