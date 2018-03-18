@@ -127,7 +127,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
                 return $current;
             }
 
-            throw new \LogicException('Already impersonate user');
+            throw  InvalidArgument::reason('Already impersonate user');
         }
 
         return null;

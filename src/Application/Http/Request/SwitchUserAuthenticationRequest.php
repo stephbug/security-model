@@ -35,7 +35,7 @@ class SwitchUserAuthenticationRequest implements SwitchUserMatcher
 
     public function isExitUserRequest(IlluminateRequest $request): bool
     {
-        return static::EXIT_USER === $this->getIdentifierFromRequest($request);
+        return $request->query->has(static::EXIT_USER);
     }
 
     public function isImpersonateUserRequest(IlluminateRequest $request): bool
