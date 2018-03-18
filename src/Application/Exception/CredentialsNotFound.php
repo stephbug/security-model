@@ -6,8 +6,8 @@ namespace StephBug\SecurityModel\Application\Exception;
 
 class CredentialsNotFound extends AuthenticationServiceException
 {
-    public static function reason(): self
+    public static function reason(string $message = null): self
     {
-        return new static('No Token found in storage');
+        return new static($message ?? 'No Token found in storage');
     }
 }
