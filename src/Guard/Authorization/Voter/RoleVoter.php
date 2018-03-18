@@ -42,6 +42,6 @@ class RoleVoter extends AccessVoter
 
     protected function extractRoles(Tokenable $token): array
     {
-        return $token->getRoles()->all();
+        return $token->getRoles();
     }
 }
