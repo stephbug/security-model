@@ -48,6 +48,11 @@ class SwitchUserAuthenticationRequest implements SwitchUserMatcher
         return static::IDENTIFIER_PARAMETER;
     }
 
+    public function getExitParameter(): string
+    {
+        return static::EXIT_USER;
+    }
+
     public function getIdentifierFromRequest(IlluminateRequest $request): ?string
     {
         return $request->get(static::IDENTIFIER_PARAMETER);

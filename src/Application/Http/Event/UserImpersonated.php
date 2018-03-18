@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Event;
 
 use Illuminate\Http\Request;
-use StephBug\SecurityModel\User\LocalUser;
+use StephBug\SecurityModel\User\UserSecurity;
 
 class UserImpersonated
 {
     /**
-     * @var LocalUser
+     * @var UserSecurity
      */
     private $user;
 
@@ -19,13 +19,13 @@ class UserImpersonated
      */
     private $request;
 
-    public function __construct(LocalUser $user, Request $request)
+    public function __construct(UserSecurity $user, Request $request)
     {
         $this->user = $user;
         $this->request = $request;
     }
 
-    public function target(): LocalUser
+    public function target(): UserSecurity
     {
         return $this->user;
     }

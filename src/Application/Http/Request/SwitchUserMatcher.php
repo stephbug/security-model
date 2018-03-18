@@ -13,4 +13,6 @@ interface SwitchUserMatcher extends AuthenticationRequest
     public function isImpersonateUserRequest(IlluminateRequest $request): bool;
 
     public function getIdentifierParameter(): string;
+
+    public function getExitParameter(): string;
 }

@@ -96,9 +96,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
             return $current;
         }
 
-        if (!$this->authorizer->isGranted($token, ['ROLE_ALLOWED_TO_SWITCH'])) {
-            throw AuthorizationDenied::reason('Insufficient authorization to impersonate user');
-        }
+        $this->requireGrantedAllowedToSwitch($token);
 
         return $this->createImpersonatedToken($identifier, $request);
     }
@@ -109,13 +107,14 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
             throw CredentialsNotFound::reason('Original token from impersonated user not found');
         }
 
-        if ($tokenSourced->getUser() instanceof LocalUser) {
-            $user = $this->userProvider->refreshUser($tokenSourced->getUser());
+        $this->requireGrantedAllowedToSwitch($tokenSourced);
 
-            $this->guard->event()->dispatchEvent(
-                new UserImpersonated($user, $request)
-            );
-        }
+        $user = $this->userProvider->refreshUser($tokenSourced->getUser());
+        $tokenSourced->setUser($user);
+
+        $this->guard->event()->dispatchEvent(
+            new UserImpersonated($user, $request)
+        );
 
         return $tokenSourced;
     }
@@ -127,7 +126,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
                 return $current;
             }
 
-            throw  InvalidArgument::reason('Already impersonate user');
+            throw InvalidArgument::reason('Already impersonate user');
         }
 
         return null;
@@ -172,10 +171,27 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
             return null;
         }
 
-        $request->query->remove($this->switchUserMatcher->getIdentifierParameter());
+        $switchParameter = $this->switchUserMatcher->getIdentifierParameter();
+        $exitParameter = $this->switchUserMatcher->getExitParameter();
+
+        if ($request->query->has($switchParameter)) {
+            $request->query->remove($switchParameter);
+        }
+
+        if ($request->query->has($exitParameter)) {
+            $request->query->remove($exitParameter);
+        }
+
         $request->server->set('QUERY_STRING', http_build_query($request->query->all()));
 
         return new RedirectResponse($request->getUri(), 302);
+    }
+
+    protected function requireGrantedAllowedToSwitch(Tokenable $token): void
+    {
+        if (!$this->authorizer->isGranted($token, ['ROLE_ALLOWED_TO_SWITCH'])) {
+            throw AuthorizationDenied::reason('Insufficient authorization to impersonate user');
+        }
     }
 
     protected function requireAuthentication(Request $request): bool
