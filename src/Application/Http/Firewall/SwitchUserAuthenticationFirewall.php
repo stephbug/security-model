@@ -197,6 +197,6 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
     protected function requireAuthentication(Request $request): bool
     {
         return $this->switchUserMatcher->matches($request)
-            && $this->authorizer->isGranted($this->guard->requireToken(), ['ROLE_ADMIN']);
+            && $this->authorizer->isGranted($this->guard->requireToken(), ['ROLE_USER']);
     }
 }

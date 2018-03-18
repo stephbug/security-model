@@ -13,17 +13,11 @@ class SwitchUserRole extends RoleValue
      */
     private $source;
 
-    /**
-     * @var string
-     */
-    private $role;
-
     public function __construct(string $role, Tokenable $source)
     {
         parent::__construct($role);
 
         $this->source = $source;
-        $this->role = $role;
     }
 
     public function source(): Tokenable
