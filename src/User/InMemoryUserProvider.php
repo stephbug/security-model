@@ -6,7 +6,6 @@ namespace StephBug\SecurityModel\User;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Exception\InvalidArgument;
-use StephBug\SecurityModel\Application\Exception\UnsupportedUser;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\User\Exception\UserNotFound;
@@ -33,24 +32,20 @@ class InMemoryUserProvider implements UserProvider
             return $user->getIdentifier()->sameValueAs($identifier);
         });
 
-        if ($user->isEmpty()) {
-            throw UserNotFound::withEmail($identifier);
+        if ($user instanceof InMemoryUser) {
+            return $user;
         }
 
-        if (1 !== $user->count()) {
+        if ($user instanceof Collection && 1 !== count($user)) {
             throw InvalidArgument::reason('In memory user identifier must be unique');
         }
 
-        return $user->first();
+        throw UserNotFound::withEmail($identifier);
     }
 
     public function refreshUser(UserSecurity $user): UserSecurity
     {
-        if (!$this->supportsClass(get_class($user))) {
-            throw UnsupportedUser::withUser($user);
-        }
-
-        return $this->requireByIdentifier($user->getIdentifier());
+        throw InvalidArgument::reason('In memory user can not be refreshed');
     }
 
     public function supportsClass(string $class): bool

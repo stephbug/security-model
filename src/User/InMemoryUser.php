@@ -85,4 +85,9 @@ class InMemoryUser implements LocalUser
             );
         });
     }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
 }
