@@ -2,6 +2,7 @@
 
 namespace StephBug\SecurityModel\Guard\Authentication\Token\Concerns;
 
+use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Application\Values\RoleValue;
 use StephBug\SecurityModel\Role\RoleSecurity;
 
@@ -18,8 +19,8 @@ trait HasRoles
             if (is_string($role)) {
                 $role = new RoleValue($role);
             } elseif (!$role instanceof RoleSecurity) {
-                throw new \RuntimeException(
-                    sprintf('Role must be a string or implement %s contract', RoleValue::class)
+                throw InvalidArgument::reason(
+                    sprintf('Role must be a string or implement %s contract', RoleSecurity::class)
                 );
             }
         }

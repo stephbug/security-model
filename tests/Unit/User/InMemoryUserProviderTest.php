@@ -90,7 +90,7 @@ class InMemoryUserProviderTest extends TestCase
     }
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockBuilder
+     * @var \PHPUnit\Framework\MockObject\MockObject|Collection
      */
     private $users;
 

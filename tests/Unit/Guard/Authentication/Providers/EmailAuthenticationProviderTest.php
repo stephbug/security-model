@@ -6,7 +6,6 @@ namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Providers;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
-use StephBug\SecurityModel\Application\Values\ClearPassword;
 use StephBug\SecurityModel\Application\Values\EmailAddress;
 use StephBug\SecurityModel\Application\Values\EmptyCredentials;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
@@ -101,7 +100,7 @@ class EmailAuthenticationProviderTest extends TestCase
         $authenticatedToken = $this->providerInstance()->authenticate($token);
 
         $this->assertNotSame($authenticatedToken, $token);
-        $this->assertTrue($authenticatedToken->getRoles()->contains($role));
+        $this->assertContains($role, $authenticatedToken->getRoles());
     }
 
     private function providerInstance(): EmailAuthenticationProvider

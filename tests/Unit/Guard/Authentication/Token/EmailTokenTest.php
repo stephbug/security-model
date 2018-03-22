@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Token;
 
+use Ramsey\Uuid\Uuid;
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
-use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
+use StephBugTest\SecurityModel\Mock\UserSecurity;
 use StephBugTest\SecurityModel\Unit\TestCase;
 
 class EmailTokenTest extends TestCase
@@ -59,6 +60,6 @@ class EmailTokenTest extends TestCase
         $this->credentials = $this->getMockForAbstractClass(Credentials::class);
         $this->securityKey = $this->getMockBuilder(SecurityKey::class)
             ->disableOriginalConstructor()->getMock();
-        $this->userToken = $this->getMockForAbstractClass(UserToken::class);
+        $this->userToken = new UserSecurity(Uuid::uuid4(), true);
     }
 }

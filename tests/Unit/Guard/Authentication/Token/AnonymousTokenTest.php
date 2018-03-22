@@ -50,7 +50,7 @@ class AnonymousTokenTest extends TestCase
      */
     public function it_has_no_role(): void
     {
-        $this->assertEmpty($this->token->getRoles()->toArray());
+        $this->assertEmpty($this->token->getRoles());
     }
 
     /**
