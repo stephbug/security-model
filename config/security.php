@@ -24,7 +24,6 @@ return [
         'voters' => [
             \StephBug\SecurityModel\Guard\Authorization\Voter\AuthenticatedTokenVoter::class,
             \StephBug\SecurityModel\Guard\Authorization\Hierarchy\RoleHierarchy::class,
-            \StephBug\SecurityModel\Guard\Authorization\Voter\AnonymousVoter::class
         ]
     ]
 ];

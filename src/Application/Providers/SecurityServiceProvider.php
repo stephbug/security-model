@@ -15,6 +15,8 @@ use StephBug\SecurityModel\Guard\Authentication\Token\RecallerToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorageAware;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
+use StephBug\SecurityModel\Guard\Authorization\Expression\SecurityExpressionLanguage;
+use StephBug\SecurityModel\Guard\Authorization\Expression\SecurityExpressionVoter;
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
 use StephBug\SecurityModel\Guard\Authorization\Hierarchy\RoleHierarchy;
 use StephBug\SecurityModel\Guard\Authorization\Strategy\AuthorizationStrategy;
@@ -72,17 +74,27 @@ class SecurityServiceProvider extends ServiceProvider
             return new $class($roles, $config['role_prefix']);
         });
 
-        // Authorization strategy
+        // Authorization strategy / Voters
+        $this->registerExpressionVoter(); // todo config
+
         $this->app->bind(AuthorizationStrategy::class, function (Application $app) use ($config) {
             $class = array_get($config, 'strategy');
 
             $voters = array_get($config, 'voters', []);
+
             foreach ($voters as &$voter) {
                 $voter = $app->make($voter);
             }
 
             return new $class($voters);
         });
+    }
+
+    protected function registerExpressionVoter(): void
+    {
+        $this->app->bind(SecurityExpressionLanguage::class);
+
+        $this->app->singleton('security_expression_voter', SecurityExpressionVoter::class);
     }
 
     protected function mergeConfig(): void
