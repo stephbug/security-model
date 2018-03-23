@@ -72,7 +72,7 @@ class SecurityExpressionVoter extends AccessVoter
         return $vote;
     }
 
-    private function supportAttribute($attribute)
+    private function supportAttribute($attribute): bool
     {
         return str_contains($attribute, '(') && str_contains($attribute, ')');
     }
