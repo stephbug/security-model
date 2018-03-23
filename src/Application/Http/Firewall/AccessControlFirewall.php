@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
-use StephBug\SecurityModel\Guard\Authorizer;
+use StephBug\SecurityModel\Guard\Authorization\Grantable;
 use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Role\Exception\AuthorizationDenied;
 
 class AccessControlFirewall
 {
@@ -16,19 +17,19 @@ class AccessControlFirewall
     private $guard;
 
     /**
-     * @var Authorizer
+     * @var Grantable
      */
-    private $authorizer;
+    private $decisionManager;
 
     /**
      * @var array
      */
     private $attributes;
 
-    public function __construct(Guard $guard, Authorizer $authorizer, array $attributes = [])
+    public function __construct(Guard $guard, Grantable $decisionManager, array $attributes = [])
     {
         $this->guard = $guard;
-        $this->authorizer = $authorizer;
+        $this->decisionManager = $decisionManager;
         $this->attributes = $attributes;
     }
 
@@ -39,11 +40,9 @@ class AccessControlFirewall
         $attributes = array_merge($this->attributes, $attributes);
 
         if ($attributes) {
-            if (!$token->isAuthenticated()) {
-                $this->guard->put($token = $this->guard->authenticate($token));
+            if (!$this->decisionManager->isGranted($token, $attributes, $request)) {
+                throw AuthorizationDenied::reason('Authorization denied');
             }
-
-            $this->authorizer->requireGranted($attributes, $request);
         }
 
         return $next($request);
