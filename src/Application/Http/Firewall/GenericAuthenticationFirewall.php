@@ -100,10 +100,6 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
 
     protected function requireAuthentication(Request $request): bool
     {
-        if ($this->guard->isStorageNotEmpty()) {
-            return false;
-        }
-
         return $this->authenticationRequest->matches($request);
     }
 

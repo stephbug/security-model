@@ -16,14 +16,4 @@ class IdentifierPasswordAuthenticationFirewall extends GenericAuthenticationFire
 
         return new IdentifierPasswordToken($identifier, $credential, $this->securityKey);
     }
-
-    protected function requireAuthentication(Request $request): bool
-    {
-        /**
-         * checkMe
-         * Override to let an authenticated remember token re authenticate
-         * For better grain, we probably need the trust resolver
-         */
-        return $this->authenticationRequest->matches($request);
-    }
 }
