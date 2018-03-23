@@ -28,7 +28,7 @@ class SimpleRecallerService extends RecallerService
 
         $this->queueCookie([$user->getId()->identify(), $tokenString]);
 
-        return new RecallerToken($user, $this->firewallKey, $this->recallerKey);
+        return new RecallerToken($user, $this->securityKey, $this->recallerKey);
     }
 
     public function onLoginSuccess(Request $request, Response $response, Tokenable $token): void

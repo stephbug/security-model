@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
+use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
-use StephBug\SecurityModel\Application\Values\FirewallKey;
 use StephBug\SecurityModel\Application\Values\RecallerKey;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\RecallerToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
@@ -20,19 +21,25 @@ class RecallerAuthenticationProvider implements AuthenticationProvider
     private $userChecker;
 
     /**
-     * @var FirewallKey
+     * @var SecurityKey
      */
-    private $firewallKey;
+    private $securityKey;
 
     /**
      * @var RecallerKey
      */
     private $recallerKey;
 
-    public function __construct(UserChecker $userChecker, FirewallKey $firewallKey, RecallerKey $recallerKey)
+    public function __construct(UserChecker $userChecker, SecurityKey $securityKey, RecallerKey $recallerKey)
     {
+        if ($securityKey->sameValueAs($recallerKey)) {
+            throw InvalidArgument::reason(
+                sprintf('Firewall key can not be equals to the recaller key in ', get_class($this))
+            );
+        }
+
         $this->userChecker = $userChecker;
-        $this->firewallKey = $firewallKey;
+        $this->securityKey = $securityKey;
         $this->recallerKey = $recallerKey;
     }
 
@@ -42,17 +49,19 @@ class RecallerAuthenticationProvider implements AuthenticationProvider
             throw UnsupportedProvider::withSupport($token, $this);
         }
 
-        if (!$token->getRecallerKey()->sameValueAs($this->recallerKey)) {
-            throw BadCredentials::invalid($token->getRecallerKey());
+        $recallerKey = $token->getRecallerKey();
+
+        if (!$recallerKey->sameValueAs($this->recallerKey)) {
+            throw BadCredentials::invalid($recallerKey);
         }
 
         $this->userChecker->onPreAuthentication($user = $token->getUser());
 
-        return new RecallerToken($user, $this->firewallKey, $this->recallerKey);
+        return new RecallerToken($user, $this->securityKey, $this->recallerKey);
     }
 
     public function supports(Tokenable $token): bool
     {
-        return $token instanceof RecallerToken && $token->getSecurityKey()->sameValueAs($this->firewallKey);
+        return $token instanceof RecallerToken && $token->getSecurityKey()->sameValueAs($this->securityKey);
     }
 }

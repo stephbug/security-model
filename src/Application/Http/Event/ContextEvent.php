@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Application\Http\Event;
 
-use StephBug\SecurityModel\Application\Values\FirewallKey;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 
 class ContextEvent
 {
@@ -15,12 +15,12 @@ class ContextEvent
      */
     private $contextKey;
 
-    public function __construct(FirewallKey $firewallKey)
+    public function __construct(SecurityKey $firewallKey)
     {
         $this->contextKey = $firewallKey;
     }
 
-    public function contextKey(): FirewallKey
+    public function contextKey(): SecurityKey
     {
         return $this->contextKey;
     }

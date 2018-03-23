@@ -8,8 +8,8 @@ use Illuminate\Contracts\Cookie\QueueingFactory;
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Exception\CookieTheft;
-use StephBug\SecurityModel\Application\Values\FirewallKey;
 use StephBug\SecurityModel\Application\Values\RecallerKey;
+use StephBug\SecurityModel\Application\Values\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Service\Logout\Logout;
 use StephBug\SecurityModel\User\UserSecurity;
@@ -38,21 +38,21 @@ abstract class RecallerService implements Recallable, Logout
     protected $recallerKey;
 
     /**
-     * @var FirewallKey
+     * @var SecurityKey
      */
-    protected $firewallKey;
+    protected $securityKey;
 
     public function __construct(QueueingFactory $cookie,
                                 CookieEncoder $cookieEncoder,
                                 UserRecallerProvider $provider,
                                 RecallerKey $recallerKey,
-                                FirewallKey $firewallKey)
+                                SecurityKey $securityKey)
     {
         $this->cookie = $cookie;
         $this->cookieEncoder = $cookieEncoder;
         $this->provider = $provider;
         $this->recallerKey = $recallerKey;
-        $this->firewallKey = $firewallKey;
+        $this->securityKey = $securityKey;
     }
 
     public function autoLogin(Request $request): ?Tokenable
@@ -66,13 +66,9 @@ abstract class RecallerService implements Recallable, Logout
         } catch (CookieTheft $cookieTheft) {
             $this->cancelCookie($request);
 
-            logger($cookieTheft->getMessage());
-
             throw new CookieTheft('Wrong cookie');
         } catch (AuthenticationException $exception) {
             $this->cancelCookie($request);
-
-            logger($exception->getMessage());
 
             return null;
         }
@@ -118,7 +114,7 @@ abstract class RecallerService implements Recallable, Logout
 
     public function getCookieName(): string
     {
-        return '_security_remember-me_' . $this->firewallKey->value();
+        return '_security_remember-me_' . $this->securityKey->value();
     }
 
     protected function cancelCookie(Request $request): void
