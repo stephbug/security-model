@@ -32,33 +32,52 @@ class AuthenticatedTokenVoter extends AccessVoter
                 continue;
             }
 
-            return $this->grant();
+            $vote = $this->deny();
+
+            if ($this->fully() === $attribute && $this->trustResolver->isFullyAuthenticated($token)) {
+                return $this->grant();
+            }
+
+            if ($this->remembered() === $attribute
+                && ($this->trustResolver->isRememberMe($token)
+                    || $this->trustResolver->isFullyAuthenticated($token))) {
+                return $this->grant();
+            }
+
+            if ($this->anonymously() === $attribute
+                && ($this->trustResolver->isAnonymous($token)
+                    || $this->trustResolver->isRememberMe($token))
+                || $this->trustResolver->isFullyAuthenticated($token)) {
+                return $this->grant();
+            }
+
+            return $vote;
         }
 
         return $vote;
     }
 
-    private function noMatch(string $attribute): bool
+    private function noMatch(string $attribute = null): bool
     {
         return null === $attribute ||
             (
-                $this->isAuthenticatedFully() !== $attribute
-                && $this->isAuthenticatedRemembered() !== $attribute
-                && $this->isAuthenticatedAnonymously() !== $attribute
+                $this->fully() !== $attribute
+                && $this->remembered() !== $attribute
+                && $this->anonymously() !== $attribute
             );
     }
 
-    public function isAuthenticatedFully(): string
+    public function fully(): string
     {
         return static::FULLY;
     }
 
-    public function isAuthenticatedRemembered(): string
+    public function remembered(): string
     {
         return static::REMEMBERED;
     }
 
-    public function isAuthenticatedAnonymously(): string
+    public function anonymously(): string
     {
         return static::ANONYMOUSLY;
     }
