@@ -24,10 +24,10 @@ class IdentifierPasswordAuthenticationProvider extends UserAuthenticationProvide
 
     public function __construct(UserProvider $userProvider,
                                 UserChecker $userChecker,
-                                SecurityKey $firewallKey,
+                                SecurityKey $securityKey,
                                 Hasher $encoder)
     {
-        parent::__construct($userProvider, $userChecker, $firewallKey);
+        parent::__construct($userProvider, $userChecker, $securityKey);
 
         $this->encoder = $encoder;
     }
