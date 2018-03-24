@@ -20,7 +20,8 @@ trait HasSerializer
             $this->user,
             $this->authenticated,
             $this->roles,
-            $this->attributes
+            $this->attributes,
+            $this->isClocking()
         ] = unserialize($serialized, [Tokenable::class]);
     }
 
@@ -30,7 +31,8 @@ trait HasSerializer
             $this->transformUser(),
             $this->authenticated,
             array_map(function ($role) {return clone $role;}, $this->roles),
-            $this->attributes
+            $this->attributes,
+            $this->isClocking()
         ];
     }
 

@@ -21,22 +21,33 @@ class TokenClock
         $this->createdAt = $this->fromNow();
     }
 
-    public function isClockExpired(): bool
+    public function isExpired(): bool
     {
         $interval = $this->interval ?? new \DateInterval('PT24H');
 
         return $this->createdAt->add($interval) < $this->fromNow();
     }
 
-    public function setClockInterval(\DateInterval $interval): TokenClock
+    public function setInterval(\DateInterval $interval): TokenClock
     {
         $this->interval = $interval;
 
         return $this;
     }
 
-    protected function fromNow(): \DateTimeImmutable
+    public function fromNow(): \DateTimeImmutable
     {
         return new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getInterval(): ?\DateInterval
+    {
+        return $this->interval;
+    }
+
 }
