@@ -21,7 +21,7 @@ trait HasSerializer
             $this->authenticated,
             $this->roles,
             $this->attributes,
-            $this->isClocking()
+            $this->clock
         ] = unserialize($serialized, [Tokenable::class]);
     }
 
