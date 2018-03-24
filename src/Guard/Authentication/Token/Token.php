@@ -10,6 +10,7 @@ use JsonSerializable;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasAttributes;
+use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasClock;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasRoles;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasSerializer;
 use StephBug\SecurityModel\Guard\Authentication\Token\Concerns\HasUserChanged;
@@ -18,7 +19,7 @@ use StephBug\SecurityModel\User\UserSecurity;
 
 abstract class Token implements Tokenable, Arrayable, Jsonable, JsonSerializable
 {
-    use HasRoles, HasUserChanged, HasAttributes, HasSerializer;
+    use HasRoles, HasUserChanged, HasAttributes, HasSerializer, HasClock;
 
     /**
      * @var UserToken|SecurityIdentifier|UserSecurity

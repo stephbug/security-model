@@ -25,6 +25,10 @@ trait HasRoles
             }
         }
 
+        if ($this->isClocking()) {
+            $this->freshClock();
+        }
+
         $this->roles = $roles;
     }
 
