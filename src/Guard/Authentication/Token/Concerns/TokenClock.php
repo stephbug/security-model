@@ -37,6 +37,6 @@ class TokenClock
 
     protected function fromNow(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable('now', 'UTC');
+        return new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
 }
