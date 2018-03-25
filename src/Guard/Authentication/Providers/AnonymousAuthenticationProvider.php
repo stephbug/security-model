@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
-use StephBug\SecurityModel\Application\Values\AnonymousIdentifier;
-use StephBug\SecurityModel\Application\Values\AnonymousKey;
+use StephBug\SecurityModel\Application\Values\Identifier\AnonymousIdentifier;
+use StephBug\SecurityModel\Application\Values\Security\AnonymousKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 

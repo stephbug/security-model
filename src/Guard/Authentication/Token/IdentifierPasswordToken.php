@@ -6,8 +6,8 @@ namespace StephBug\SecurityModel\Guard\Authentication\Token;
 
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 
 class IdentifierPasswordToken extends Token
 {

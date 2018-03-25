@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Security;
 
 use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
 
-final class RecallerKey extends SecurityKey
+final class AnonymousKey extends SecurityKey
 {
     public function sameValueAs(SecurityValue $aValue): bool
     {

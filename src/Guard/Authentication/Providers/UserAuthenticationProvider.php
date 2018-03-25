@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use StephBug\SecurityModel\Application\Exception\UnsupportedProvider;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
-use StephBug\SecurityModel\Application\Values\SwitchUserRole;
+use StephBug\SecurityModel\Application\Values\Role\SwitchUserRole;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
 use StephBug\SecurityModel\User\Exception\UserNotFound;

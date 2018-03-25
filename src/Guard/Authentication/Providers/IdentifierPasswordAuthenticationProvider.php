@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard\Authentication\Providers;
 
 use Illuminate\Contracts\Hashing\Hasher;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\Exception\BadCredentials;

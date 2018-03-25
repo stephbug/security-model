@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Providers;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;

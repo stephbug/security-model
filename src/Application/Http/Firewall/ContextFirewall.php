@@ -6,7 +6,7 @@ namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Http\Event\ContextEvent;
-use StephBug\SecurityModel\Application\Values\UserProviders;
+use StephBug\SecurityModel\Application\Values\Providers\UserProviders;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Guard;
 

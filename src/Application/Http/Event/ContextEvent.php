@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Application\Http\Event;
 
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 
 class ContextEvent
 {

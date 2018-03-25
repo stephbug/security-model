@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Request;
 
 use Illuminate\Http\Request as IlluminateRequest;
-use StephBug\SecurityModel\Application\Values\ClearPassword;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
+use StephBug\SecurityModel\Application\Values\User\ClearPassword;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 use Symfony\Component\HttpFoundation\Request;
 
 class IdentifierPasswordAuthenticationRequest implements AuthenticationRequest

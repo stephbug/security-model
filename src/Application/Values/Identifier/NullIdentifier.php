@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Identifier;
 
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;

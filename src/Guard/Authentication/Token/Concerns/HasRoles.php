@@ -3,7 +3,7 @@
 namespace StephBug\SecurityModel\Guard\Authentication\Token\Concerns;
 
 use StephBug\SecurityModel\Application\Exception\InvalidArgument;
-use StephBug\SecurityModel\Application\Values\RoleValue;
+use StephBug\SecurityModel\Application\Values\Role\RoleValue;
 use StephBug\SecurityModel\Role\RoleSecurity;
 
 trait HasRoles

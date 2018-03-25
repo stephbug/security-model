@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\User\Exception;
 
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 
 class BadCredentials extends AuthenticationException
 {

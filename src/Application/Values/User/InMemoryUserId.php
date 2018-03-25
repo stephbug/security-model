@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\User;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use StephBug\SecurityModel\Application\Values\Identifier\UniqueId;
 
-class InMemoryUserId extends UniqueId
+final class InMemoryUserId extends UniqueId
 {
     protected function __construct(UuidInterface $uniqueId)
     {

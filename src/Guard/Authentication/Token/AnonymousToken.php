@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication\Token;
 
-use StephBug\SecurityModel\Application\Values\AnonymousIdentifier;
-use StephBug\SecurityModel\Application\Values\AnonymousKey;
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Identifier\AnonymousIdentifier;
+use StephBug\SecurityModel\Application\Values\Security\AnonymousKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 
 class AnonymousToken extends Token
 {

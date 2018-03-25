@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Identifier;
 
 use Ramsey\Uuid\UuidInterface;
 use StephBug\SecurityModel\Application\Exception\Assert\Secure;

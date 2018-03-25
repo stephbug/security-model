@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authentication;
 
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\User\UserProvider;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Authorization\Hierarchy;
 
-use StephBug\SecurityModel\Application\Values\RoleValue;
+use StephBug\SecurityModel\Application\Values\Role\RoleValue;
 use StephBug\SecurityModel\Role\RoleSecurity;
 
 class ReachableRole implements RoleHierarchy

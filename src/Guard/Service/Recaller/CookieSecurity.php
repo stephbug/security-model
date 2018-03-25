@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Guard\Service\Recaller;
 
-use StephBug\SecurityModel\Application\Values\RecallerKey;
+use StephBug\SecurityModel\Application\Values\Security\RecallerKey;
 
 class CookieSecurity implements CookieEncoder
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Providers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

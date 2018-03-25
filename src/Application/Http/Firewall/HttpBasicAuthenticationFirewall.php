@@ -11,7 +11,7 @@ use StephBug\SecurityModel\Application\Http\Entrypoint\Entrypoint;
 use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Guard;

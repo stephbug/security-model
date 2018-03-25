@@ -6,8 +6,8 @@ namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
-use StephBug\SecurityModel\Application\Values\AnonymousIdentifier;
-use StephBug\SecurityModel\Application\Values\AnonymousKey;
+use StephBug\SecurityModel\Application\Values\Identifier\AnonymousIdentifier;
+use StephBug\SecurityModel\Application\Values\Security\AnonymousKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBug\SecurityModel\Guard\Guard;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\User;
 
 use StephBug\SecurityModel\Application\Exception\Assert\Secure;
 
-class ClearPasswordWithConfirmation extends ClearPassword
+final class ClearPasswordWithConfirmation extends ClearPassword
 {
     public function __construct($password, $passwordConfirmation)
     {

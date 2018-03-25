@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\Role;
 
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 

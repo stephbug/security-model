@@ -6,14 +6,14 @@ namespace StephBug\SecurityModel\User;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Exception\InvalidArgument;
-use StephBug\SecurityModel\Application\Values\BcryptPassword;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailContract;
 use StephBug\SecurityModel\Application\Values\Contract\EncodedPassword;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UniqueIdentifier;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
-use StephBug\SecurityModel\Application\Values\InMemoryUserId;
-use StephBug\SecurityModel\Application\Values\RoleValue;
+use StephBug\SecurityModel\Application\Values\Role\RoleValue;
+use StephBug\SecurityModel\Application\Values\User\BcryptPassword;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
+use StephBug\SecurityModel\Application\Values\User\InMemoryUserId;
 use StephBug\SecurityModel\Role\RoleSecurity;
 
 class InMemoryUser implements LocalUser

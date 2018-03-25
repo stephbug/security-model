@@ -6,8 +6,8 @@ namespace StephBug\SecurityModel\Application\Http\Request;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
-use StephBug\SecurityModel\Application\Values\NullIdentifier;
+use StephBug\SecurityModel\Application\Values\Identifier\NullIdentifier;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 use Symfony\Component\HttpFoundation\Request;
 
 class SwitchUserAuthenticationRequest implements SwitchUserMatcher

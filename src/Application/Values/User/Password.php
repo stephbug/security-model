@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values;
+namespace StephBug\SecurityModel\Application\Values\User;
 
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 
