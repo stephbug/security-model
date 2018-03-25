@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Token;
 
-use StephBug\SecurityModel\Application\Values\AnonymousIdentifier;
-use StephBug\SecurityModel\Application\Values\AnonymousKey;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
+use StephBug\SecurityModel\Application\Values\Identifier\AnonymousIdentifier;
+use StephBug\SecurityModel\Application\Values\Security\AnonymousKey;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
 use StephBugTest\SecurityModel\Unit\TestCase;
 

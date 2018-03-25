@@ -6,7 +6,7 @@ namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Token;
 
 use Ramsey\Uuid\Uuid;
 use StephBug\SecurityModel\Application\Values\Contract\Credentials;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBugTest\SecurityModel\Mock\UserSecurity;
 use StephBugTest\SecurityModel\Unit\TestCase;

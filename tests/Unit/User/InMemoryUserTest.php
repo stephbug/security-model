@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace StephBugTest\SecurityModel\Unit\User;
 
-use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Role\RoleSecurity;
 use StephBug\SecurityModel\User\InMemoryUser;
 use StephBugTest\SecurityModel\Unit\TestCase;

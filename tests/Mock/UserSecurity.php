@@ -10,7 +10,7 @@ use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailCont
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UniqueIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 
 class UserSecurity implements \StephBug\SecurityModel\User\UserSecurity, UserToken
 {

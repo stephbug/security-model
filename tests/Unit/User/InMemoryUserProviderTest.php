@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace StephBugTest\SecurityModel\Unit\User;
 
 use Illuminate\Support\Collection;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 use StephBug\SecurityModel\User\InMemoryUser;
 use StephBug\SecurityModel\User\InMemoryUserProvider;
 use StephBugTest\SecurityModel\Unit\TestCase;

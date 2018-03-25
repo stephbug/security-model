@@ -6,10 +6,10 @@ namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Providers;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
-use StephBug\SecurityModel\Application\Values\EmailAddress;
-use StephBug\SecurityModel\Application\Values\EmptyCredentials;
-use StephBug\SecurityModel\Application\Values\SecurityKey;
-use StephBug\SecurityModel\Application\Values\SwitchUserRole;
+use StephBug\SecurityModel\Application\Values\Role\SwitchUserRole;
+use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
+use StephBug\SecurityModel\Application\Values\User\EmailAddress;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Providers\EmailAuthenticationProvider;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
