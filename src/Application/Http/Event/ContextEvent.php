@@ -15,9 +15,9 @@ class ContextEvent
      */
     private $contextKey;
 
-    public function __construct(SecurityKey $firewallKey)
+    public function __construct(SecurityKey $securityKey)
     {
-        $this->contextKey = $firewallKey;
+        $this->contextKey = $securityKey;
     }
 
     public function contextKey(): SecurityKey
