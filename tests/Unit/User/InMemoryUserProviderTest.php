@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace StephBugTest\SecurityModel\Unit\User;
 
 use Illuminate\Support\Collection;
-use StephBug\SecurityModel\Application\Values\User\EmailAddress;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
 use StephBug\SecurityModel\User\InMemoryUser;
 use StephBug\SecurityModel\User\InMemoryUserProvider;
 use StephBugTest\SecurityModel\Unit\TestCase;
@@ -33,7 +33,7 @@ class InMemoryUserProviderTest extends TestCase
 
         $provider = new InMemoryUserProvider($this->users);
 
-        $this->assertEquals($user, $provider->requireByIdentifier(EmailAddress::fromString('foo@bar.com')));
+        $this->assertEquals($user, $provider->requireByIdentifier(EmailIdentifier::fromString('foo@bar.com')));
     }
 
     /**
@@ -46,7 +46,7 @@ class InMemoryUserProviderTest extends TestCase
 
         $provider = new InMemoryUserProvider($this->users);
 
-        $provider->requireByIdentifier(EmailAddress::fromString('bar@bar.com'));
+        $provider->requireByIdentifier(EmailIdentifier::fromString('bar@bar.com'));
     }
 
     /**
@@ -64,7 +64,7 @@ class InMemoryUserProviderTest extends TestCase
 
         $provider = new InMemoryUserProvider($this->users);
 
-        $provider->requireByIdentifier(EmailAddress::fromString('bar@bar.com'));
+        $provider->requireByIdentifier(EmailIdentifier::fromString('bar@bar.com'));
     }
 
     /**

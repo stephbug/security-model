@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Application\Values\User;
+namespace StephBug\SecurityModel\Application\Values\Identifier;
 
 use StephBug\SecurityModel\Application\Exception\Assert\Secure;
-use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailIdentifier;
+use StephBug\SecurityModel\Application\Values\Contract\EmailIdentifier as BaseEmailIdentifier;
+use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 
-class EmailAddress implements EmailIdentifier, UserToken
+class EmailIdentifier implements BaseEmailIdentifier, SecurityIdentifier, UserToken
 {
     /**
      * @var string

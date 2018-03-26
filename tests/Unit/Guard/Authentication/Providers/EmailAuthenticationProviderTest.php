@@ -6,9 +6,9 @@ namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Providers;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
 use StephBug\SecurityModel\Application\Values\Role\SwitchUserRole;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
-use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Providers\EmailAuthenticationProvider;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
@@ -66,7 +66,7 @@ class EmailAuthenticationProviderTest extends TestCase
         $this->expectsOnUserChecker();
 
         $token = new EmailToken(
-            EmailAddress::fromString('foo@bar.com'), new EmptyCredentials(), $this->securityKey
+            EmailIdentifier::fromString('foo@bar.com'), new EmptyCredentials(), $this->securityKey
         );
 
         $user = $this->getUserSecurityInstance();

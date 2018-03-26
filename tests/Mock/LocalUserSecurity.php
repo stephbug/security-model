@@ -17,6 +17,5 @@ class LocalUserSecurity extends UserSecurity implements LocalUser
 
     public function eraseCredentials(): void
     {
-
     }
 }

@@ -6,14 +6,14 @@ namespace StephBug\SecurityModel\Application\Http\Request;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailContract;
-use StephBug\SecurityModel\Application\Values\User\EmailAddress;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
 use Symfony\Component\HttpFoundation\Request;
 
 class EmailAuthenticationRequest implements AuthenticationRequest
 {
     public function extract(IlluminateRequest $request): EmailContract
     {
-        return EmailAddress::fromString($request->input('identifier'));
+        return EmailIdentifier::fromString($request->input('identifier'));
     }
 
     public function matches(Request $request): bool

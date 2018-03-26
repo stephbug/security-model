@@ -6,11 +6,11 @@ namespace StephBugTest\SecurityModel\Mock;
 
 use Illuminate\Support\Collection;
 use Ramsey\Uuid\UuidInterface;
-use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailContract;
+use StephBug\SecurityModel\Application\Values\Contract\EmailIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UniqueIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
-use StephBug\SecurityModel\Application\Values\User\EmailAddress;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier as EmailId;
 
 class UserSecurity implements \StephBug\SecurityModel\User\UserSecurity, UserToken
 {
@@ -40,9 +40,9 @@ class UserSecurity implements \StephBug\SecurityModel\User\UserSecurity, UserTok
         return new UserSecurityId($this->uid, $this->sameValueAs);
     }
 
-    public function getEmail(): EmailContract
+    public function getEmail(): EmailIdentifier
     {
-        return EmailAddress::fromString('foobar@bar.com');
+        return EmailId::fromString('foobar@bar.com');
     }
 
     public function getRoles(): Collection

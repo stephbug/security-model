@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Request;
 
 use Illuminate\Http\Request as IlluminateRequest;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
 use StephBug\SecurityModel\Application\Values\User\ClearPassword;
-use StephBug\SecurityModel\Application\Values\User\EmailAddress;
 use Symfony\Component\HttpFoundation\Request;
 
 class IdentifierPasswordAuthenticationRequest implements AuthenticationRequest
@@ -14,7 +14,7 @@ class IdentifierPasswordAuthenticationRequest implements AuthenticationRequest
     public function extract(IlluminateRequest $request): array
     {
         return [
-            EmailAddress::fromString($request->input('identifier')),
+            EmailIdentifier::fromString($request->input('identifier')),
             new ClearPassword($request->input('password'))
         ];
     }
