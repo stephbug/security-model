@@ -54,16 +54,22 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
 
     protected function processAuthentication(Request $request): ?Response
     {
-        try{
-         $token = $this->guard->authenticate($this->createToken($request));
+        try {
+            $token = $this->createToken($request);
 
-         $this->guard->put($token);
+            $this->guard->event()->dispatchAttemptLoginEvent($token, $request);
 
-         $this->guard->event()->dispatchLoginEvent($request, $token);
+            $token = $this->guard->authenticate($token);
 
-         return null;
-        }catch (AuthenticationException $exception){
+            $this->guard->put($token);
+
+            $this->guard->event()->dispatchLoginEvent($request, $token);
+
+            return null;
+        } catch (AuthenticationException $exception) {
             $this->guard->forget();
+
+            $this->guard->event()->dispatchFailureLoginEvent($this->securityKey, $request);
 
             return $this->entrypoint->startAuthentication($request, $exception);
         }
