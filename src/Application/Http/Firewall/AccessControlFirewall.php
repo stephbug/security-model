@@ -39,7 +39,7 @@ class AccessControlFirewall
 
         $attributes = array_merge($this->attributes, $attributes);
 
-        if ($attributes) {
+        if (!empty($attributes)) {
             if (!$this->decisionManager->isGranted($token, $attributes, $request)) {
                 throw AuthorizationDenied::reason('Authorization denied');
             }
