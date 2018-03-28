@@ -70,11 +70,19 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
     protected function processAuthentication(Request $request): ?Response
     {
         try {
-            $token = $this->guard->authenticate($this->createToken($request));
+            $token = $this->createToken($request);
 
-            return $this->onSuccess($request, $token);
+            if (!$this->stateless) {
+                $this->guard->event()->dispatchAttemptLoginEvent($token, $request);
+            }
+
+            return $this->onSuccess($request, $this->guard->authenticate($token));
 
         } catch (AuthenticationException $exception) {
+            if (!$this->stateless) {
+                $this->guard->event()->dispatchFailureLoginEvent($this->securityKey, $request);
+            }
+
             return $this->entrypoint->startAuthentication($request, $exception);
         }
     }
