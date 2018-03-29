@@ -9,7 +9,7 @@ use StephBug\SecurityModel\Application\Exception\Assert\SecurityValueFailed;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Http\Entrypoint\Entrypoint;
 use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
-use StephBug\SecurityModel\Application\Values\Contract\EmailAddress;
+use StephBug\SecurityModel\Application\Values\Contract\EmailIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
@@ -103,7 +103,7 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
 
     protected function isAlreadyAuthenticated(SecurityIdentifier $identifier, Tokenable $token = null): bool
     {
-        if (!$identifier instanceof EmailAddress) {
+        if (!$identifier instanceof EmailIdentifier) {
             return false;
         }
 

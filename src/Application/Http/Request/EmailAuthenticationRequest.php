@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Request;
 
 use Illuminate\Http\Request as IlluminateRequest;
-use StephBug\SecurityModel\Application\Values\Contract\EmailAddress as EmailContract;
-use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
+use StephBug\SecurityModel\Application\Values\Contract\EmailIdentifier;
+use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier as EmailId;
 use Symfony\Component\HttpFoundation\Request;
 
 class EmailAuthenticationRequest implements AuthenticationRequest
 {
-    public function extract(IlluminateRequest $request): EmailContract
+    public function extract(IlluminateRequest $request): EmailIdentifier
     {
-        return EmailIdentifier::fromString($request->input('identifier'));
+        return EmailId::fromString($request->input('identifier'));
     }
 
     public function matches(Request $request): bool
