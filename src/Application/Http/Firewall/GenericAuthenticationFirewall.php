@@ -72,16 +72,12 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
         try {
             $token = $this->createToken($request);
 
-            if (!$this->stateless) {
-                $this->guard->events()->attemptLoginEvent($token, $request);
-            }
+            $this->guard->events()->attemptLoginEvent($token, $request, $this->stateless);
 
             return $this->onSuccess($request, $this->guard->putAuthenticatedToken($token));
 
         } catch (AuthenticationException $exception) {
-            if (!$this->stateless) {
-                $this->guard->events()->failureLoginEvent($this->securityKey, $request);
-            }
+            $this->guard->events()->failureLoginEvent($this->securityKey, $request, $this->stateless);
 
             return $this->entrypoint->startAuthentication($request, $exception);
         }
@@ -91,9 +87,7 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
 
     protected function onSuccess(Request $request, Tokenable $token): Response
     {
-        if (!$this->stateless) {
-            $this->guard->events()->loginEvent($request, $token);
-        }
+        $this->guard->events()->loginEvent($request, $token, $this->stateless);
 
         $response = $this->authenticationSuccess->onAuthenticationSuccess($request, $token);
 

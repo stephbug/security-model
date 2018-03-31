@@ -60,9 +60,7 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
         try {
             $token = $this->authenticator->createToken($request, $this->securityKey);
 
-            if (!$this->stateless) {
-                $this->guard->events()->attemptLoginEvent($token, $request);
-            }
+            $this->guard->events()->attemptLoginEvent($token, $request, $this->stateless);
 
             return $this->onSuccess($request, $this->guard->putAuthenticatedToken($token));
         } catch (AuthenticationException $exception) {
@@ -77,9 +75,7 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
 
     private function onSuccess(Request $request, Tokenable $token): ?Response
     {
-        if (!$this->stateless) {
-            $this->guard->events()->loginEvent($request, $token);
-        }
+        $this->guard->events()->loginEvent($request, $token, $this->stateless);
 
         $response = null;
 
@@ -92,9 +88,7 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
 
     private function onFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        if (!$this->stateless) {
-            $this->guard->events()->failureLoginEvent($this->securityKey, $request);
-        }
+        $this->guard->events()->failureLoginEvent($this->securityKey, $request, $this->stateless);
 
         if ($this->authenticator instanceof AuthenticationFailure) {
             return $this->authenticator->onAuthenticationFailure($request, $exception);

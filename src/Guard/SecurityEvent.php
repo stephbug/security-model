@@ -26,18 +26,30 @@ class SecurityEvent implements SecurityEvents
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function loginEvent(Request $request, Tokenable $token): void
+    public function loginEvent(Request $request, Tokenable $token, bool $stateless = false): void
     {
+        if($stateless){
+            return;
+        }
+
         $this->dispatch(new UserLogin($request, $token));
     }
 
-    public function failureLoginEvent(SecurityKey $securityKey, Request $request): void
+    public function failureLoginEvent(SecurityKey $securityKey, Request $request, bool $stateless = false): void
     {
+        if($stateless){
+            return;
+        }
+
         $this->dispatch(new UserFailureLogin($securityKey, $request));
     }
 
-    public function attemptLoginEvent(Tokenable $token, Request $request): void
+    public function attemptLoginEvent(Tokenable $token, Request $request, bool $stateless = false): void
     {
+        if($stateless){
+            return;
+        }
+
         $this->dispatch(new UserAttemptLogin($token, $request));
     }
 
@@ -46,8 +58,12 @@ class SecurityEvent implements SecurityEvents
         $this->dispatch(new UserLogout($token));
     }
 
-    public function dispatch($event, array $payload = [])
+    public function dispatch($event, array $payload = [], bool $stateless = false)
     {
+        if($stateless){
+            return null;
+        }
+
         if (is_object($event)) {
             return $this->eventDispatcher->dispatch($event);
         }

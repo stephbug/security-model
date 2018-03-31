@@ -22,15 +22,16 @@ interface SecurityEvents
     /**
      * @param string|object $event
      * @param array $payload
+     * @param bool $stateless
      * @return mixed
      */
-    public function dispatch($event, array $payload = []);
+    public function dispatch($event, array $payload = [], bool $stateless = false);
 
-    public function loginEvent(Request $request, Tokenable $token): void;
+    public function loginEvent(Request $request, Tokenable $token, bool $stateless = false): void;
 
-    public function failureLoginEvent(SecurityKey $securityKey, Request $request): void;
+    public function failureLoginEvent(SecurityKey $securityKey, Request $request, bool $stateless = false): void;
 
-    public function attemptLoginEvent(Tokenable $token, Request $request): void;
+    public function attemptLoginEvent(Tokenable $token, Request $request, bool $stateless = false): void;
 
     public function logoutEvent(Tokenable $token): void;
 }
