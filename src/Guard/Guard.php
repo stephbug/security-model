@@ -89,4 +89,9 @@ class Guard implements Guardable
     {
         return $this->securityEvents->dispatch($event, $payload);
     }
+
+    public function events(): SecurityEvents
+    {
+        return $this->securityEvents;
+    }
 }

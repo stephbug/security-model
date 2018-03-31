@@ -24,5 +24,7 @@ interface Guardable
 
     public function putAuthenticatedToken(Tokenable $token): Tokenable;
 
+    public function events(): SecurityEvents;
+
     public function dispatch($event, array $payload = []);
 }

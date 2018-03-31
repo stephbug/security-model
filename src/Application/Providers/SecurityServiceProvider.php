@@ -21,6 +21,7 @@ use StephBug\SecurityModel\Guard\Authorization\Grantable;
 use StephBug\SecurityModel\Guard\Authorization\Hierarchy\RoleHierarchy;
 use StephBug\SecurityModel\Guard\Authorization\Strategy\AuthorizationStrategy;
 use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\Guard\Guard;
 use StephBug\SecurityModel\Guard\SecurityEvent;
 
@@ -37,14 +38,6 @@ class SecurityServiceProvider extends ServiceProvider
             [$this->getConfigPath() => config_path('security.php')],
             'config'
         );
-
-        $this->app->bind(Guardable::class, function (Application $app) {
-            return new Guard(
-                $app->make(TokenStorage::class),
-                $app->make(Authenticatable::class),
-                $app->make(SecurityEvent::class)
-            );
-        });
 
         $this->registerAuthorizationServices();
     }
@@ -67,6 +60,10 @@ class SecurityServiceProvider extends ServiceProvider
         $this->app->singleton(AuthenticationProviders::class);
 
         $this->app->bind(Authenticatable::class, AuthenticationManager::class);
+
+        $this->app->bind(SecurityEvents::class, SecurityEvent::class);
+
+        $this->app->bind(Guardable::class, Guard::class);
     }
 
     protected function registerAuthorizationServices(): void
@@ -122,7 +119,8 @@ class SecurityServiceProvider extends ServiceProvider
     {
         return [
             TokenStorage::class, TrustResolver::class, AuthenticationProviders::class, Authenticatable::class,
-            Grantable::class, RoleHierarchy::class, AuthorizationStrategy::class
+            Grantable::class, RoleHierarchy::class, AuthorizationStrategy::class, SecurityEvents::class,
+            Guardable::class
         ];
     }
 }

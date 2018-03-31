@@ -7,7 +7,6 @@ namespace StephBug\SecurityModel\Application\Http\Firewall;
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Guard\Contract\Guardable;
-use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\Guard\Service\Recaller\Recallable;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +37,7 @@ class RecallerAuthenticationFirewall extends AuthenticationFirewall
         try {
             $token = $this->guard->putAuthenticatedToken($token);
 
-            $this->guard->dispatch(SecurityEvents::LOGIN_EVENT, [$request, $token]);
+            $this->guard->events()->loginEvent($request, $token);
 
             return null;
         } catch (AuthenticationException $exception) {

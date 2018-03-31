@@ -9,7 +9,6 @@ use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Http\Response\LogoutSuccess;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
 use StephBug\SecurityModel\Guard\Contract\Guardable;
-use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\Guard\Service\Logout\Logout;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -63,7 +62,7 @@ class LogoutFirewall extends AuthenticationFirewall
 
         $this->guard->clearStorage();
 
-        $this->guard->dispatch(SecurityEvents::LOGOUT_EVENT, [$token]);
+        $this->guard->events()->logoutEvent($token);
 
         return $response;
     }

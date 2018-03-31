@@ -15,7 +15,6 @@ use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Contract\Guardable;
-use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
 use StephBug\SecurityModel\User\UserSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,17 +57,17 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
         try {
             $token = $this->createToken($request);
 
-            $this->guard->dispatch(SecurityEvents::ATTEMPT_LOGIN_EVENT, [$token, $request]);
+            $this->guard->events()->attemptLoginEvent($token, $request);
 
             $token = $this->guard->putAuthenticatedToken($token);
 
-            $this->guard->dispatch(SecurityEvents::LOGIN_EVENT, [$request, $token]);
+            $this->guard->events()->loginEvent($request, $token);
 
             return null;
         } catch (AuthenticationException $exception) {
             $this->guard->clearStorage();
 
-            $this->guard->dispatch(SecurityEvents::FAILURE_LOGIN_EVENT, [$this->securityKey, $request]);
+            $this->guard->events()->failureLoginEvent($this->securityKey, $request);
 
             return $this->entrypoint->startAuthentication($request, $exception);
         }
