@@ -61,9 +61,11 @@ class Guard implements Guardable
         return !$this->isStorageEmpty();
     }
 
-    public function putToken(Tokenable $token): void
+    public function putToken(Tokenable $token): Tokenable
     {
         $this->tokenStorage->setToken($token);
+
+        return $token;
     }
 
     public function clearStorage(): void
@@ -78,11 +80,7 @@ class Guard implements Guardable
 
     public function putAuthenticatedToken(Tokenable $token): Tokenable
     {
-        $authenticatedToken = $this->authenticate($token);
-
-        $this->putToken($authenticatedToken);
-
-        return $authenticatedToken;
+        return $this->putToken($this->authenticate($token));
     }
 
     public function dispatch($event, array $payload = [])

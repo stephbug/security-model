@@ -16,7 +16,7 @@ interface Guardable
 
     public function isStorageNotEmpty(): bool;
 
-    public function putToken(Tokenable $token): void;
+    public function putToken(Tokenable $token): Tokenable;
 
     public function clearStorage(): void;
 
