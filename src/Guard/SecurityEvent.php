@@ -6,14 +6,11 @@ namespace StephBug\SecurityModel\Guard;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
-use StephBug\SecurityModel\Application\Http\Event\UserAttemptLogin;
-use StephBug\SecurityModel\Application\Http\Event\UserFailureLogin;
-use StephBug\SecurityModel\Application\Http\Event\UserLogin;
-use StephBug\SecurityModel\Application\Http\Event\UserLogout;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 
-class SecurityEvent
+class SecurityEvent implements SecurityEvents
 {
     /**
      * @var Dispatcher
@@ -25,33 +22,32 @@ class SecurityEvent
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function dispatchLoginEvent(Request $request, Tokenable $token): void
+    public function loginEvent(Request $request, Tokenable $token): void
     {
-        $this->eventDispatcher->dispatch(new UserLogin($request, $token));
+        $this->dispatch(static::LOGIN_EVENT, [$request, $token]);
     }
 
-    public function dispatchFailureLoginEvent(SecurityKey $securityKey, Request $request): void
+    public function failureLoginEvent(SecurityKey $securityKey, Request $request): void
     {
-        $this->eventDispatcher->dispatch(new UserFailureLogin($securityKey, $request));
+        $this->dispatch(static::FAILURE_LOGIN_EVENT, [$securityKey, $request]);
     }
 
-    public function dispatchAttemptLoginEvent(Tokenable $token, Request $request): void
+    public function attemptLoginEvent(Tokenable $token, Request $request): void
     {
-        $this->eventDispatcher->dispatch(new UserAttemptLogin($token, $request));
+        $this->dispatch(static::ATTEMPT_LOGIN_EVENT, [$token, $request]);
     }
 
-    public function dispatchLogoutEvent(Tokenable $token): void
+    public function logoutEvent(Tokenable $token): void
     {
-        $this->eventDispatcher->dispatch(new UserLogout($token));
+        $this->dispatch(static::LOGOUT_EVENT, [$token]);
     }
 
-    /**
-     * @param object $event
-     *
-     * @return array|null
-     */
-    public function dispatchEvent($event)
+    public function dispatch($event, array $payload = [])
     {
-        return $this->eventDispatcher->dispatch($event);
+        if (is_object($event)) {
+            return $this->eventDispatcher->dispatch($event);
+        }
+
+        return $this->eventDispatcher->dispatch($event, $payload);
     }
 }

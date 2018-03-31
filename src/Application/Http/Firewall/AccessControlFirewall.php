@@ -6,13 +6,13 @@ namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 use StephBug\SecurityModel\Role\Exception\AuthorizationDenied;
 
 class AccessControlFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -26,7 +26,7 @@ class AccessControlFirewall
      */
     private $attributes;
 
-    public function __construct(Guard $guard, Grantable $decisionManager, array $attributes = [])
+    public function __construct(Guardable $guard, Grantable $decisionManager, array $attributes = [])
     {
         $this->guard = $guard;
         $this->decisionManager = $decisionManager;

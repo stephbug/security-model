@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Http\Event\ContextEvent;
 use StephBug\SecurityModel\Application\Values\Providers\UserProviders;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 
 class ContextFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -27,7 +27,7 @@ class ContextFirewall
      */
     private $event;
 
-    public function __construct(Guard $guard, UserProviders $userProviders, ContextEvent $contextEvent)
+    public function __construct(Guardable $guard, UserProviders $userProviders, ContextEvent $contextEvent)
     {
         $this->guard = $guard;
         $this->userProviders = $userProviders;
@@ -36,7 +36,7 @@ class ContextFirewall
 
     public function handle(Request $request, \Closure $next)
     {
-        $this->guard->event()->dispatchEvent($this->event);
+        $this->guard->dispatch($this->event);
 
         $tokenString = $request->session()->get($this->event->sessionKey());
 
@@ -51,11 +51,11 @@ class ContextFirewall
     {
         $token = unserialize($tokenString, [Tokenable::class]);
 
-        $this->guard->forget();
+        $this->guard->clearStorage();
 
         if ($token instanceof Tokenable) {
             if ($token = $this->userProviders->refreshUser($token)) {
-                $this->guard->put($token);
+                $this->guard->putToken($token);
             }
         }
     }

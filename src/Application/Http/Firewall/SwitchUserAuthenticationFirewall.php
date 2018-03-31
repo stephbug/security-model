@@ -16,7 +16,7 @@ use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 use StephBug\SecurityModel\Role\Exception\AuthorizationDenied;
 use StephBug\SecurityModel\User\LocalUser;
 use StephBug\SecurityModel\User\UserProvider;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -54,7 +54,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
      */
     private $stateless;
 
-    public function __construct(Guard $guard,
+    public function __construct(Guardable $guard,
                                 Grantable $authorizer,
                                 SwitchUserMatcher $switchUserMatcher,
                                 UserProvider $userProvider,
@@ -82,7 +82,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
         }
 
         if ($token) {
-            $this->guard->put($token);
+            $this->guard->putToken($token);
         }
 
         return $this->createRedirectResponse($request);
@@ -112,9 +112,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
         $user = $this->userProvider->refreshUser($tokenSourced->getUser());
         $tokenSourced->setUser($user);
 
-        $this->guard->event()->dispatchEvent(
-            new UserImpersonated($user, $request)
-        );
+        $this->guard->dispatch(new UserImpersonated($user, $request));
 
         return $tokenSourced;
     }
@@ -147,9 +145,7 @@ class SwitchUserAuthenticationFirewall extends AuthenticationFirewall
 
         $token = new IdentifierPasswordToken($user, $user->getPassword(), $this->securityKey, $roles->toArray());
 
-        $this->guard->event()->dispatchEvent(
-            new UserImpersonated($user, $request)
-        );
+        $this->guard->dispatch(new UserImpersonated($user, $request));
 
         return $token;
     }

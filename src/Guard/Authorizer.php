@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Guard;
 
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 use StephBug\SecurityModel\Role\Exception\AuthorizationDenied;
 
 class Authorizer
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -19,7 +20,7 @@ class Authorizer
      */
     private $authorizationChecker;
 
-    public function __construct(Guard $guard, Grantable $authorizationChecker)
+    public function __construct(Guardable $guard, Grantable $authorizationChecker)
     {
         $this->guard = $guard;
         $this->authorizationChecker = $authorizationChecker;

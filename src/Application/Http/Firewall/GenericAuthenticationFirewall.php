@@ -11,14 +11,15 @@ use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Http\Response\AuthenticationSuccess;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\Guard\Service\Recaller\Recallable;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     protected $guard;
 
@@ -52,7 +53,7 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
      */
     protected $recallerService;
 
-    public function __construct(Guard $guard,
+    public function __construct(Guardable $guard,
                                 AuthenticationRequest $authenticationRequest,
                                 AuthenticationSuccess $authenticationSuccess,
                                 Entrypoint $entrypoint,
@@ -73,14 +74,14 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
             $token = $this->createToken($request);
 
             if (!$this->stateless) {
-                $this->guard->event()->dispatchAttemptLoginEvent($token, $request);
+                $this->guard->dispatch(SecurityEvents::ATTEMPT_LOGIN_EVENT, [$token, $request]);
             }
 
-            return $this->onSuccess($request, $this->guard->authenticate($token));
+            return $this->onSuccess($request, $this->guard->putAuthenticatedToken($token));
 
         } catch (AuthenticationException $exception) {
             if (!$this->stateless) {
-                $this->guard->event()->dispatchFailureLoginEvent($this->securityKey, $request);
+                $this->guard->dispatch(SecurityEvents::FAILURE_LOGIN_EVENT, [$this->securityKey, $request]);
             }
 
             return $this->entrypoint->startAuthentication($request, $exception);
@@ -91,10 +92,8 @@ abstract class GenericAuthenticationFirewall extends AuthenticationFirewall
 
     protected function onSuccess(Request $request, Tokenable $token): Response
     {
-        $this->guard->put($token);
-
         if (!$this->stateless) {
-            $this->guard->event()->dispatchLoginEvent($request, $token);
+            $this->guard->dispatch(SecurityEvents::LOGIN_EVENT, [$request, $token]);
         }
 
         $response = $this->authenticationSuccess->onAuthenticationSuccess($request, $token);

@@ -8,8 +8,10 @@ use StephBug\SecurityModel\Application\Exception\CredentialsNotFound;
 use StephBug\SecurityModel\Guard\Authentication\Authenticatable;
 use StephBug\SecurityModel\Guard\Authentication\Token\Storage\TokenStorage;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 
-class Guard
+class Guard implements Guardable
 {
     /**
      * @var TokenStorage
@@ -19,47 +21,39 @@ class Guard
     /**
      * @var Authenticatable
      */
-    private $manager;
+    private $authenticationManager;
 
     /**
      * @var SecurityEvent
      */
-    private $securityEvent;
+    private $securityEvents;
 
-    public function __construct(TokenStorage $tokenStorage, Authenticatable $manager, SecurityEvent $securityEvent)
+    public function __construct(TokenStorage $tokenStorage,
+                                Authenticatable $authenticationManager,
+                                SecurityEvents $securityEvents)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->manager = $manager;
-        $this->securityEvent = $securityEvent;
+        $this->authenticationManager = $authenticationManager;
+        $this->securityEvents = $securityEvents;
     }
 
-    public function storage(): TokenStorage
+    public function getToken(): ?Tokenable
     {
-        return $this->tokenStorage;
-    }
-
-    public function put(Tokenable $token): void
-    {
-        $this->tokenStorage->setToken($token);
-    }
-
-    public function forget(): void
-    {
-        $this->tokenStorage->setToken(null);
+        return $this->tokenStorage->getToken();
     }
 
     public function requireToken(): Tokenable
     {
-        if ($this->isStorageEmpty()) {
+        if (!$token = $this->getToken()) {
             throw CredentialsNotFound::reason();
         }
 
-        return $this->storage()->getToken();
+        return $token;
     }
 
     public function isStorageEmpty(): bool
     {
-        return null === $this->tokenStorage->getToken();
+        return null === $this->getToken();
     }
 
     public function isStorageNotEmpty(): bool
@@ -67,13 +61,32 @@ class Guard
         return !$this->isStorageEmpty();
     }
 
-    public function authenticate(Tokenable $token): Tokenable
+    public function putToken(Tokenable $token): void
     {
-        return $this->manager->authenticate($token);
+        $this->tokenStorage->setToken($token);
     }
 
-    public function event(): SecurityEvent
+    public function clearStorage(): void
     {
-        return $this->securityEvent;
+        $this->tokenStorage->setToken(null);
+    }
+
+    public function authenticate(Tokenable $token): Tokenable
+    {
+        return $this->authenticationManager->authenticate($token);
+    }
+
+    public function putAuthenticatedToken(Tokenable $token): Tokenable
+    {
+        $authenticatedToken = $this->authenticate($token);
+
+        $this->putToken($authenticatedToken);
+
+        return $authenticatedToken;
+    }
+
+    public function dispatch($event, array $payload = [])
+    {
+        return $this->securityEvents->dispatch($event, $payload);
     }
 }

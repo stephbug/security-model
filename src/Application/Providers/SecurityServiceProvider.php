@@ -20,6 +20,9 @@ use StephBug\SecurityModel\Guard\Authorization\Expression\SecurityExpressionVote
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
 use StephBug\SecurityModel\Guard\Authorization\Hierarchy\RoleHierarchy;
 use StephBug\SecurityModel\Guard\Authorization\Strategy\AuthorizationStrategy;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\SecurityEvent;
 
 class SecurityServiceProvider extends ServiceProvider
 {
@@ -34,6 +37,14 @@ class SecurityServiceProvider extends ServiceProvider
             [$this->getConfigPath() => config_path('security.php')],
             'config'
         );
+
+        $this->app->bind(Guardable::class, function (Application $app) {
+            return new Guard(
+                $app->make(TokenStorage::class),
+                $app->make(Authenticatable::class),
+                $app->make(SecurityEvent::class)
+            );
+        });
 
         $this->registerAuthorizationServices();
     }

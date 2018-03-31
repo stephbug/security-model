@@ -9,13 +9,13 @@ use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Values\Identifier\AnonymousIdentifier;
 use StephBug\SecurityModel\Application\Values\Security\AnonymousKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\AnonymousToken;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 use Symfony\Component\HttpFoundation\Response;
 
 class AnonymousAuthenticationFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -24,7 +24,7 @@ class AnonymousAuthenticationFirewall extends AuthenticationFirewall
      */
     private $anonymousKey;
 
-    public function __construct(Guard $guard, AnonymousKey $anonymousKey)
+    public function __construct(Guardable $guard, AnonymousKey $anonymousKey)
     {
         $this->guard = $guard;
         $this->anonymousKey = $anonymousKey;
@@ -34,11 +34,9 @@ class AnonymousAuthenticationFirewall extends AuthenticationFirewall
     {
         $token = new AnonymousToken(new AnonymousIdentifier(), $this->anonymousKey);
 
-        try{
-            $this->guard->put(
-                $this->guard->authenticate($token)
-            );
-        }catch (AuthenticationException $exception){
+        try {
+            $this->guard->putAuthenticatedToken($token);
+        } catch (AuthenticationException $exception) {
         }
 
         return null;

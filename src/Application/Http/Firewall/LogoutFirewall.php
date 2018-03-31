@@ -8,14 +8,15 @@ use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Http\Response\LogoutSuccess;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\Guard\Service\Logout\Logout;
 use Symfony\Component\HttpFoundation\Response;
 
 class LogoutFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -39,7 +40,7 @@ class LogoutFirewall extends AuthenticationFirewall
      */
     private $response;
 
-    public function __construct(Guard $guard,
+    public function __construct(Guardable $guard,
                                 AuthenticationRequest $authenticationRequest,
                                 TrustResolver $trustResolver,
                                 LogoutSuccess $response)
@@ -56,13 +57,13 @@ class LogoutFirewall extends AuthenticationFirewall
 
         $token = $this->guard->requireToken();
 
-        foreach($this->logoutHandlers as $handler){
+        foreach ($this->logoutHandlers as $handler) {
             $handler->logout($request, $response, $token);
         }
 
-        $this->guard->forget();
+        $this->guard->clearStorage();
 
-        $this->guard->event()->dispatchLogoutEvent($token);
+        $this->guard->dispatch(SecurityEvents::LOGOUT_EVENT, [$token]);
 
         return $response;
     }
@@ -80,7 +81,7 @@ class LogoutFirewall extends AuthenticationFirewall
             return false;
         }
 
-        if ($this->trustResolver->isAnonymous($this->guard->storage()->getToken())) {
+        if ($this->trustResolver->isAnonymous($this->guard->getToken())) {
             return false;
         }
 

@@ -6,12 +6,12 @@ namespace StephBug\SecurityModel\Guard\Authorization;
 
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Authorization\Strategy\AuthorizationStrategy;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
 
 class AuthorizationChecker implements Grantable
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -27,7 +27,7 @@ class AuthorizationChecker implements Grantable
      */
     private $alwaysAuthenticate = false;
 
-    public function __construct(Guard $guard, AuthorizationStrategy $strategy)
+    public function __construct(Guardable $guard, AuthorizationStrategy $strategy)
     {
         $this->guard = $guard;
         $this->strategy = $strategy;
@@ -43,9 +43,7 @@ class AuthorizationChecker implements Grantable
     protected function requireAuthentication(Tokenable $token): Tokenable
     {
         if ($this->alwaysAuthenticate || !$token->isAuthenticated()) {
-            $this->guard->put(
-                $token = $this->guard->authenticate($token)
-            );
+            $token = $this->guard->putAuthenticatedToken($token);
         }
 
         return $token;

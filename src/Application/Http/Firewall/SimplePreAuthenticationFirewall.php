@@ -12,13 +12,14 @@ use StephBug\SecurityModel\Application\Http\Response\AuthenticationSuccess;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\SimplePreAuthenticator;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use Symfony\Component\HttpFoundation\Response;
 
 class SimplePreAuthenticationFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -42,7 +43,7 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
      */
     private $stateless;
 
-    public function __construct(Guard $guard,
+    public function __construct(Guardable $guard,
                                 SimplePreAuthenticator $authenticator,
                                 AuthenticationRequest $authenticationRequest,
                                 SecurityKey $securityKey,
@@ -61,10 +62,10 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
             $token = $this->authenticator->createToken($request, $this->securityKey);
 
             if (!$this->stateless) {
-                $this->guard->event()->dispatchAttemptLoginEvent($token, $request);
+                $this->guard->dispatch(SecurityEvents::ATTEMPT_LOGIN_EVENT, [$token, $request]);
             }
 
-            return $this->onSuccess($request, $this->guard->authenticate($token));
+            return $this->onSuccess($request, $this->guard->putAuthenticatedToken($token));
         } catch (AuthenticationException $exception) {
             return $this->onFailure($request, $exception);
         }
@@ -77,10 +78,8 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
 
     private function onSuccess(Request $request, Tokenable $token): ?Response
     {
-        $this->guard->put($token);
-
         if (!$this->stateless) {
-            $this->guard->event()->dispatchLoginEvent($request, $token);
+            $this->guard->dispatch(SecurityEvents::LOGIN_EVENT, [$request, $token]);
         }
 
         $response = null;
@@ -95,7 +94,7 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
     private function onFailure(Request $request, AuthenticationException $exception): ?Response
     {
         if (!$this->stateless) {
-            $this->guard->event()->dispatchFailureLoginEvent($this->securityKey, $request);
+            $this->guard->dispatch(SecurityEvents::FAILURE_LOGIN_EVENT, [$this->securityKey, $request]);
         }
 
         if ($this->authenticator instanceof AuthenticationFailure) {

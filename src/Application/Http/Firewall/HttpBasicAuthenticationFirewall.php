@@ -14,7 +14,8 @@ use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\IdentifierPasswordToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
-use StephBug\SecurityModel\Guard\Guard;
+use StephBug\SecurityModel\Guard\Contract\Guardable;
+use StephBug\SecurityModel\Guard\Contract\SecurityEvents;
 use StephBug\SecurityModel\User\Exception\BadCredentials;
 use StephBug\SecurityModel\User\UserSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
 {
     /**
-     * @var Guard
+     * @var Guardable
      */
     private $guard;
 
@@ -41,7 +42,7 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
      */
     private $securityKey;
 
-    public function __construct(Guard $guard,
+    public function __construct(Guardable $guard,
                                 AuthenticationRequest $authenticationRequest,
                                 Entrypoint $entrypoint,
                                 SecurityKey $securityKey)
@@ -57,19 +58,17 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
         try {
             $token = $this->createToken($request);
 
-            $this->guard->event()->dispatchAttemptLoginEvent($token, $request);
+            $this->guard->dispatch(SecurityEvents::ATTEMPT_LOGIN_EVENT, [$token, $request]);
 
-            $token = $this->guard->authenticate($token);
+            $token = $this->guard->putAuthenticatedToken($token);
 
-            $this->guard->put($token);
-
-            $this->guard->event()->dispatchLoginEvent($request, $token);
+            $this->guard->dispatch(SecurityEvents::LOGIN_EVENT, [$request, $token]);
 
             return null;
         } catch (AuthenticationException $exception) {
-            $this->guard->forget();
+            $this->guard->clearStorage();
 
-            $this->guard->event()->dispatchFailureLoginEvent($this->securityKey, $request);
+            $this->guard->dispatch(SecurityEvents::FAILURE_LOGIN_EVENT, [$this->securityKey, $request]);
 
             return $this->entrypoint->startAuthentication($request, $exception);
         }
@@ -95,7 +94,7 @@ class HttpBasicAuthenticationFirewall extends AuthenticationFirewall
                 return false;
             }
 
-            return !$this->isAlreadyAuthenticated($identifier, $this->guard->storage()->getToken());
+            return !$this->isAlreadyAuthenticated($identifier, $this->guard->getToken());
         } catch (SecurityValueFailed $exception) {
             return false;
         }
