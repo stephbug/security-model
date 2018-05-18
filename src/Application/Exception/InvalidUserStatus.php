@@ -6,6 +6,9 @@ namespace StephBug\SecurityModel\Application\Exception;
 
 use StephBug\SecurityModel\User\UserSecurity;
 
+// should be part of user domain exception
+// Implement NotEnableStatus and IsLockedStatus
+
 class InvalidUserStatus extends AuthenticationException
 {
     public static function notEnabled(UserSecurity $user): self

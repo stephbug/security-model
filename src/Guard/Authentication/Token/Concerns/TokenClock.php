@@ -49,5 +49,4 @@ class TokenClock
     {
         return $this->interval;
     }
-
 }

@@ -16,21 +16,11 @@ class GuardTest extends TestCase
     /**
      * @test
      */
-    public function it_return_a_token_storage_instance(): void
-    {
-        $guard = $this->guardInstance();
-
-        $this->assertInstanceOf(TokenStorage::class, $guard->storage());
-    }
-
-    /**
-     * @test
-     */
     public function it_return_a_security_event_instance(): void
     {
         $guard = $this->guardInstance();
 
-        $this->assertInstanceOf(SecurityEvent::class, $guard->event());
+        $this->assertInstanceOf(SecurityEvent::class, $guard->events());
     }
 
     /**
@@ -54,7 +44,22 @@ class GuardTest extends TestCase
         $this->assertNull($this->storage->getToken());
         $this->storage->expects($this->once())->method('setToken');
 
-        $guard->put($this->token);
+        $guard->putToken($this->token);
+    }
+
+    /**
+     * @test
+     */
+    public function it_authenticate_and_put_token_on_storage(): void
+    {
+        $guard = $this->guardInstance();
+
+        $this->assertNull($this->storage->getToken());
+        $this->storage->expects($this->once())->method('setToken');
+
+        $this->manager->expects($this->once())->method('authenticate')->willReturn($this->token);
+
+        $this->assertEquals($this->token, $guard->putAuthenticatedToken($this->token));
     }
 
     /**
@@ -66,7 +71,7 @@ class GuardTest extends TestCase
 
         $this->assertNull($this->storage->getToken());
         $this->storage->expects($this->once())->method('setToken');
-        $guard->forget();
+        $guard->clearStorage();
     }
 
     /**
@@ -93,7 +98,6 @@ class GuardTest extends TestCase
 
         $guard->requireToken();
     }
-
 
     private function guardInstance(): Guard
     {

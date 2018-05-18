@@ -19,7 +19,6 @@ class AuthorizationChecker implements Grantable
     /**
      * @var AuthorizationStrategy
      */
-
     private $strategy;
 
     /**
