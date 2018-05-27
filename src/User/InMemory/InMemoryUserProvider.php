@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\User;
+namespace StephBug\SecurityModel\User\InMemory;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Application\Values\Contract\EmailAddress;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\User\Exception\UserNotFound;
+use StephBug\SecurityModel\User\UserProvider;
+use StephBug\SecurityModel\User\UserSecurity;
 
 class InMemoryUserProvider implements UserProvider
 {

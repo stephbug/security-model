@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Guard\Service\Recaller;
+namespace StephBug\SecurityModel\Guard\Service\Recaller\SimpleRecallerService;
 
 use Illuminate\Http\Request;
 use StephBug\SecurityModel\Application\Exception\AuthenticationException;
 use StephBug\SecurityModel\Application\Exception\CookieTheft;
 use StephBug\SecurityModel\Guard\Authentication\Token\RecallerToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
+use StephBug\SecurityModel\Guard\Service\Recaller\RecallerService;
+use StephBug\SecurityModel\Guard\Service\Recaller\RecallerValue;
 use StephBug\SecurityModel\User\UserSecurity;
 use Symfony\Component\HttpFoundation\Response;
 

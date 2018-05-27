@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\User;
+namespace StephBug\SecurityModel\User\InMemory;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Exception\InvalidArgument;
@@ -15,6 +15,7 @@ use StephBug\SecurityModel\Application\Values\Role\RoleValue;
 use StephBug\SecurityModel\Application\Values\User\BcryptPassword;
 use StephBug\SecurityModel\Application\Values\User\InMemoryUserId;
 use StephBug\SecurityModel\Role\RoleSecurity;
+use StephBug\SecurityModel\User\LocalUser;
 
 class InMemoryUser implements LocalUser
 {
