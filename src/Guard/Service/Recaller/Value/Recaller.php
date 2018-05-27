@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StephBug\SecurityModel\Guard\Service\Recaller;
+namespace StephBug\SecurityModel\Guard\Service\Recaller\Value;
 
 class Recaller implements RecallerValue
 {
@@ -50,6 +50,12 @@ class Recaller implements RecallerValue
             && trim($segments[0]) !== ''
             && trim($segments[1]) !== ''
             && trim($segments[2]) !== '';
+    }
+
+    public function toArray(): array
+    {
+        // without hash
+        return [$this->id(), $this->token()];
     }
 
     private function extractRecallerValueAt(int $position): string

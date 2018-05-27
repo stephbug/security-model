@@ -9,7 +9,7 @@ use StephBug\SecurityModel\Application\Values\Contract\EmailIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UniqueIdentifier;
 
-interface UserSecurity
+interface UserSecurity extends UserSecurityModel
 {
     public function getIdentifier(): SecurityIdentifier;
 

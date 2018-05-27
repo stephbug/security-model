@@ -10,7 +10,7 @@ use StephBug\SecurityModel\User\UserSecurity;
 
 interface UserRecallerProviderStore
 {
-    public function refreshUserWithRecallerIdentifier(
+    public function refreshUserWithNewRecallerIdentifier(
         UserRecaller $recaller,
         RecallerIdentifier $identifier): UserSecurity;
 }

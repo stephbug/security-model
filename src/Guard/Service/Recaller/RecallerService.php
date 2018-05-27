@@ -12,6 +12,10 @@ use StephBug\SecurityModel\Application\Values\Security\RecallerKey;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 use StephBug\SecurityModel\Guard\Service\Logout\Logout;
+use StephBug\SecurityModel\Guard\Service\Recaller\Encoder\CookieEncoder;
+use StephBug\SecurityModel\Guard\Service\Recaller\Providers\RecallerProvider;
+use StephBug\SecurityModel\Guard\Service\Recaller\Value\Recaller;
+use StephBug\SecurityModel\Guard\Service\Recaller\Value\RecallerValue;
 use StephBug\SecurityModel\User\UserSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,17 +24,17 @@ abstract class RecallerService implements Recallable, Logout
     /**
      * @var QueueingFactory
      */
-    private $cookie;
+    protected $cookie;
 
     /**
      * @var CookieEncoder
      */
-    protected $cookieEncoder;
+    protected $encoder;
 
     /**
-     * @var UserRecallerProvider
+     * @var RecallerProvider
      */
-    protected $provider;
+    protected $recallerProvider;
 
     /**
      * @var RecallerKey
@@ -43,14 +47,14 @@ abstract class RecallerService implements Recallable, Logout
     protected $securityKey;
 
     public function __construct(QueueingFactory $cookie,
-                                CookieEncoder $cookieEncoder,
-                                UserRecallerProvider $provider,
+                                CookieEncoder $encoder,
+                                RecallerProvider $recallerProvider,
                                 RecallerKey $recallerKey,
                                 SecurityKey $securityKey)
     {
         $this->cookie = $cookie;
-        $this->cookieEncoder = $cookieEncoder;
-        $this->provider = $provider;
+        $this->encoder = $encoder;
+        $this->recallerProvider = $recallerProvider;
         $this->recallerKey = $recallerKey;
         $this->securityKey = $securityKey;
     }
@@ -112,11 +116,6 @@ abstract class RecallerService implements Recallable, Logout
         );
     }
 
-    public function getCookieName(): string
-    {
-        return '_security_remember-me_' . $this->securityKey->value();
-    }
-
     protected function cancelCookie(Request $request): void
     {
         $this->cookie->queue(
@@ -126,11 +125,11 @@ abstract class RecallerService implements Recallable, Logout
 
     protected function queueCookie(array $values): void
     {
-        $values = array_merge($values, [$this->cookieEncoder->generateCookieHash($values)]);
+        $value = $this->encoder->encode($values);
 
-        $value = $this->cookieEncoder->encodeCookie(implode(Recaller::DELIMITER, $values));
-
-        $this->cookie->queue($this->cookie->forever($this->getCookieName(), $value));
+        $this->cookie->queue(
+            $this->cookie->forever($this->getCookieName(), $value)
+        );
     }
 
     protected function getRecaller(Request $request): ?RecallerValue
@@ -139,9 +138,8 @@ abstract class RecallerService implements Recallable, Logout
             return null;
         }
 
-        $recaller = $this->cookieEncoder->decodeCookie($recaller);
+        $recaller = new Recaller($this->encoder->decode($recaller));
 
-        $recaller = new Recaller($recaller);
         if ($recaller->valid()) {
             return $recaller;
         }
@@ -149,7 +147,12 @@ abstract class RecallerService implements Recallable, Logout
         throw new AuthenticationException('Invalid recaller');
     }
 
-    abstract public function processAutoLogin(RecallerValue $recaller, Request $request): Tokenable;
+    protected function getCookieName(): string
+    {
+        return '_security_remember-me_' . $this->securityKey->value();
+    }
 
-    abstract public function onLoginSuccess(Request $request, Response $response, Tokenable $token): void;
+    abstract protected function processAutoLogin(RecallerValue $recaller, Request $request): Tokenable;
+
+    abstract protected function onLoginSuccess(Request $request, Response $response, Tokenable $token): void;
 }
