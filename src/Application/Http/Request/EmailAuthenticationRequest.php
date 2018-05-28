@@ -11,6 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class EmailAuthenticationRequest implements AuthenticationRequest
 {
+    /**
+     * @var string
+     */
+    private $loginRoute;
+
+    public function __construct(string $loginRoute)
+    {
+        $this->loginRoute = $loginRoute;
+    }
+
     public function extract(IlluminateRequest $request): EmailIdentifier
     {
         return EmailId::fromString($request->input('identifier'));
@@ -18,6 +28,10 @@ class EmailAuthenticationRequest implements AuthenticationRequest
 
     public function matches(Request $request): bool
     {
-        return $request->isMethod('post') && $request->is('*login');
+        if ($request instanceof IlluminateRequest) {
+            return $request->route()->getName() === $this->loginRoute;
+        }
+
+        return false;
     }
 }

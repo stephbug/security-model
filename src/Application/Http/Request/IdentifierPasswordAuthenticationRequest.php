@@ -11,6 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class IdentifierPasswordAuthenticationRequest implements AuthenticationRequest
 {
+    /**
+     * @var string
+     */
+    private $loginRoute;
+
+    public function __construct(string $loginRoute)
+    {
+        $this->loginRoute = $loginRoute;
+    }
+
     public function extract(IlluminateRequest $request): array
     {
         return [
@@ -21,6 +31,10 @@ class IdentifierPasswordAuthenticationRequest implements AuthenticationRequest
 
     public function matches(Request $request): bool
     {
-        return $request->is('*login') && $request->isMethod('post');
+        if ($request instanceof IlluminateRequest) {
+            return $request->route()->getName() === $this->loginRoute;
+        }
+
+        return false;
     }
 }

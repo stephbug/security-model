@@ -19,7 +19,7 @@ class HttpBasicAuthenticationRequest implements AuthenticationRequest
         ];
     }
 
-    public function matches(Request $request)
+    public function matches(Request $request): bool
     {
         return null === $request->getUser();
     }
