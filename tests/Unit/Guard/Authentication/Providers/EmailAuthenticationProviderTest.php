@@ -30,7 +30,6 @@ class EmailAuthenticationProviderTest extends TestCase
 
         $token = new EmailToken(
             new UserSecurity(Uuid::uuid4(), false),
-            new EmptyCredentials(),
             $this->securityKey
         );
 
@@ -47,7 +46,6 @@ class EmailAuthenticationProviderTest extends TestCase
 
         $token = new EmailToken(
             $user = $this->getUserSecurityInstance(),
-            new EmptyCredentials(),
             $this->securityKey
         );
 
@@ -65,9 +63,7 @@ class EmailAuthenticationProviderTest extends TestCase
         $this->securityKey->expects($this->once())->method('sameValueAs')->willReturn(true);
         $this->expectsOnUserChecker();
 
-        $token = new EmailToken(
-            EmailIdentifier::fromString('foo@bar.com'), new EmptyCredentials(), $this->securityKey
-        );
+        $token = new EmailToken(EmailIdentifier::fromString('foo@bar.com'), $this->securityKey);
 
         $user = $this->getUserSecurityInstance();
         $this->userProvider->expects($this->once())->method('requireByIdentifier')->willReturn($user);
@@ -89,7 +85,6 @@ class EmailAuthenticationProviderTest extends TestCase
         $role = new SwitchUserRole('foo', $this->getMockForAbstractClass(Tokenable::class));
         $token = new EmailToken(
             $this->getUserSecurityInstance(),
-            new EmptyCredentials(),
             $this->securityKey,
             [$role]
         );

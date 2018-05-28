@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace StephBugTest\SecurityModel\Unit\Guard\Authentication\Token;
 
 use Ramsey\Uuid\Uuid;
-use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
+use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBugTest\SecurityModel\Mock\UserSecurity;
 use StephBugTest\SecurityModel\Unit\TestCase;
@@ -32,9 +32,9 @@ class EmailTokenTest extends TestCase
     /**
      * @test
      */
-    public function it_return_credentials(): void
+    public function it_return_empty_credentials(): void
     {
-        $this->assertEquals($this->credentials, $this->tokenInstance()->getCredentials());
+        $this->assertEquals(new EmptyCredentials(), $this->tokenInstance()->getCredentials());
     }
 
     /**
@@ -48,7 +48,7 @@ class EmailTokenTest extends TestCase
 
     private function tokenInstance(array $roles = [])
     {
-        return new EmailToken($this->userToken, $this->credentials, $this->securityKey, $roles);
+        return new EmailToken($this->userToken, $this->securityKey, $roles);
     }
 
     private $securityKey;
@@ -57,7 +57,6 @@ class EmailTokenTest extends TestCase
 
     protected function setUp()
     {
-        $this->credentials = $this->getMockForAbstractClass(Credentials::class);
         $this->securityKey = $this->getMockBuilder(SecurityKey::class)
             ->disableOriginalConstructor()->getMock();
         $this->userToken = new UserSecurity(Uuid::uuid4(), true);
