@@ -118,8 +118,11 @@ class SecurityServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [
-            TokenStorage::class, TrustResolver::class, AuthenticationProviders::class, Authenticatable::class,
-            Grantable::class, RoleHierarchy::class, AuthorizationStrategy::class, SecurityEvents::class,
+            TokenStorage::class,
+            TrustResolver::class,
+            AuthenticationProviders::class,
+            Authenticatable::class,
+            SecurityEvents::class,
             Guardable::class
         ];
     }
