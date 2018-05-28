@@ -2,10 +2,6 @@
 
 return [
 
-    'guard' => [
-
-    ],
-
     'authorizer' => [
         'role_prefix' => 'ROLE_',
 
@@ -13,7 +9,7 @@ return [
             'service' => \StephBug\SecurityModel\Guard\Authorization\Hierarchy\ReachableRole::class,
 
             'roles' => [
-                /*'ROLE_ADMIN' => ['ROLE_USER']*/
+                'ROLE_ADMIN' => ['ROLE_USER']
             ]
         ],
 
@@ -24,6 +20,7 @@ return [
         'voters' => [
             \StephBug\SecurityModel\Guard\Authorization\Voter\AuthenticatedTokenVoter::class,
             \StephBug\SecurityModel\Guard\Authorization\Voter\RoleHierarchyVoter::class,
+            'security_expression_voter'
         ]
     ]
 ];

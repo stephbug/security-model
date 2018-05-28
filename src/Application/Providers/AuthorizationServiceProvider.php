@@ -6,6 +6,7 @@ namespace StephBug\SecurityModel\Application\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Guard\Authorization\Expression\SecurityExpressionLanguage;
 use StephBug\SecurityModel\Guard\Authorization\Expression\SecurityExpressionVoter;
 use StephBug\SecurityModel\Guard\Authorization\Grantable;
@@ -44,7 +45,19 @@ class AuthorizationServiceProvider extends ServiceProvider
 
             $class = array_get($config, 'strategy');
 
+            if (!class_exists($class)) {
+                throw InvalidArgument::reason(
+                    sprintf('Class %s does not exists for strategy key in security configuration')
+                );
+            }
+
             $voters = array_get($config, 'voters', []);
+
+            if (!$voters) {
+                throw InvalidArgument::reason(
+                    'You must add at least one voter in the security configuration'
+                );
+            }
 
             foreach ($voters as &$voter) {
                 $voter = $app->make($voter);
@@ -56,9 +69,13 @@ class AuthorizationServiceProvider extends ServiceProvider
 
     protected function registerExpressionVoter(): void
     {
-        $this->app->bind(SecurityExpressionLanguage::class);
+        $alias = 'security_expression_voter';
 
-        $this->app->singleton('security_expression_voter', SecurityExpressionVoter::class);
+        if (in_array($alias, $this->getSecurityConfig()['voters'])) {
+            $this->app->bind(SecurityExpressionLanguage::class);
+
+            $this->app->singleton($alias, SecurityExpressionVoter::class);
+        }
     }
 
     protected function registerAuthorizationChecker(): void
