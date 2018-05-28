@@ -9,12 +9,6 @@
       "email": "stephbugdev@gmail.com"
     }
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/stephbug/service-bus"
-    }
-  ],
   "require": {
     "php": "^7.1",
     "illuminate/support": "^5.6",
