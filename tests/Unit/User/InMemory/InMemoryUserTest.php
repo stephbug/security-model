@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace StephBugTest\SecurityModel\Unit\User;
 
 use StephBug\SecurityModel\Role\RoleSecurity;
-use StephBug\SecurityModel\User\InMemoryUser;
+use StephBug\SecurityModel\User\InMemory\InMemoryUser;
 use StephBugTest\SecurityModel\Unit\TestCase;
 
 class InMemoryUserTest extends TestCase

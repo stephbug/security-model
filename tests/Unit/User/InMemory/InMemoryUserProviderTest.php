@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace StephBugTest\SecurityModel\Unit\User;
+namespace StephBugTest\SecurityModel\Unit\User\InMemory;
 
 use Illuminate\Support\Collection;
 use StephBug\SecurityModel\Application\Values\Identifier\EmailIdentifier;
-use StephBug\SecurityModel\User\InMemoryUser;
-use StephBug\SecurityModel\User\InMemoryUserProvider;
+use StephBug\SecurityModel\User\InMemory\InMemoryUser;
+use StephBug\SecurityModel\User\InMemory\InMemoryUserProvider;
 use StephBugTest\SecurityModel\Unit\TestCase;
 
 class InMemoryUserProviderTest extends TestCase
