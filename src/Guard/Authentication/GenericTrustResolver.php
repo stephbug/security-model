@@ -11,43 +11,37 @@ class GenericTrustResolver implements TrustResolver
     /**
      * @var string
      */
-    private $anonymousToken;
+    private $anonymousTokenClass;
 
     /**
      * @var string
      */
-    private $rememberMe;
+    private $rememberMeClass;
 
-    public function __construct(string $anonymousToken, string $rememberMe)
+    public function __construct(string $anonymousTokenClass, string $rememberMeClass)
     {
-        $this->anonymousToken = $anonymousToken;
-        $this->rememberMe = $rememberMe;
+        $this->anonymousTokenClass = $anonymousTokenClass;
+        $this->rememberMeClass = $rememberMeClass;
     }
 
     public function isAnonymous(Tokenable $token = null): bool
     {
-        if (!$token) {
-            return false;
-        }
-
-        return $token instanceof $this->anonymousToken;
+        return !$token
+            ? false
+            : $token instanceof $this->anonymousTokenClass;
     }
 
     public function isRememberMe(Tokenable $token = null): bool
     {
-        if (!$token) {
-            return false;
-        }
-
-        return $token instanceof $this->rememberMe;
+        return !$token
+            ? false
+            : $token instanceof $this->rememberMeClass;
     }
 
     public function isFullyAuthenticated(Tokenable $token = null): bool
     {
-        if (!$token) {
-            return false;
-        }
-
-        return !$this->isAnonymous($token) && !$this->isRememberMe($token);
+        return !$token
+            ? false
+            : !$this->isAnonymous($token) && !$this->isRememberMe($token);
     }
 }

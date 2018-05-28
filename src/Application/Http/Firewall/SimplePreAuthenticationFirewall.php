@@ -90,10 +90,12 @@ class SimplePreAuthenticationFirewall extends AuthenticationFirewall
     {
         $this->guard->events()->failureLoginEvent($this->securityKey, $request, $this->stateless);
 
+        $response = null;
+
         if ($this->authenticator instanceof AuthenticationFailure) {
-            return $this->authenticator->onAuthenticationFailure($request, $exception);
+            $response = $this->authenticator->onAuthenticationFailure($request, $exception);
         }
 
-        return null;
+        return $response;
     }
 }

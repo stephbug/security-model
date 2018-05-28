@@ -8,7 +8,6 @@ use StephBug\SecurityModel\Application\Values\Contract\Credentials;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 use StephBug\SecurityModel\Application\Values\Security\SecurityKey;
-use StephBug\SecurityModel\User\UserSecurity;
 
 interface Tokenable extends \Serializable
 {
@@ -16,9 +15,6 @@ interface Tokenable extends \Serializable
 
     public function setUser(UserToken $user): void;
 
-    /**
-     * @return UserToken|SecurityIdentifier|UserSecurity
-     */
     public function getUser(): UserToken;
 
     public function getIdentifier(): SecurityIdentifier;
