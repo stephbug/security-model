@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
-use StephBug\SecurityModel\Application\Values\User\EmptyCredentials;
 use StephBug\SecurityModel\Guard\Authentication\Token\EmailToken;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
@@ -15,6 +14,6 @@ class EmailAuthenticationFirewall extends GenericAuthenticationFirewall
     {
         $identifier = $this->authenticationRequest->extract($request);
 
-        return new EmailToken($identifier, new EmptyCredentials(), $this->securityKey);
+        return new EmailToken($identifier, $this->securityKey);
     }
 }
