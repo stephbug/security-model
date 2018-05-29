@@ -28,7 +28,7 @@ trait HasSerializer
     public function toArray(): array
     {
         return [
-            $this->transformUser(),
+            $this->user instanceof UserSecurity ? $this->transformUser() : clone $this->user,
             $this->authenticated,
             array_map(function ($role) {return clone $role;}, $this->roles),
             $this->attributes,
