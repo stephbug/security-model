@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace StephBug\SecurityModel\Application\Http\Firewall;
 
 use Illuminate\Http\Request;
+use StephBug\SecurityModel\Application\Exception\InvalidArgument;
 use StephBug\SecurityModel\Application\Http\Request\AuthenticationRequest;
 use StephBug\SecurityModel\Application\Http\Response\LogoutSuccess;
 use StephBug\SecurityModel\Guard\Authentication\TrustResolver;
@@ -52,6 +53,12 @@ class LogoutFirewall extends AuthenticationFirewall
 
     protected function processAuthentication(Request $request): ?Response
     {
+        if(!$this->logoutHandlers){
+            throw InvalidArgument::reason(
+                sprintf('No logout handler has been added to class %s', static::class)
+            );
+        }
+
         $response = $this->response->onLogoutSuccess($request);
 
         $token = $this->guard->requireToken();

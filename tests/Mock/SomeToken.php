@@ -13,6 +13,7 @@ class SomeToken extends Token
 {
     public function __construct(array $roles = [])
     {
+        // fixMe error on serialization
         parent::__construct($roles);
 
         $this->hasRoles() and $this->setAuthenticated(true);

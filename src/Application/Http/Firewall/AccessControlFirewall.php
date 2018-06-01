@@ -37,7 +37,7 @@ class AccessControlFirewall
     {
         $token = $this->guard->requireToken();
 
-        $attributes = array_merge($this->attributes, $attributes);
+        $attributes = array_flatten(array_merge($this->attributes, $attributes));
 
         if (!empty($attributes)) {
             if (!$this->decisionManager->isGranted($token, $attributes, $request)) {
