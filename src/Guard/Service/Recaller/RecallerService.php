@@ -149,6 +149,8 @@ abstract class RecallerService implements Recallable, Logout
 
     protected function getCookieName(): string
     {
+        // should be overridden in implementation when multiples cookies
+        // are generated for the same firewall
         return '_security_remember-me_' . $this->securityKey->value();
     }
 

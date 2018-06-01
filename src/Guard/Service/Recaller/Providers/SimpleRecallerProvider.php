@@ -24,6 +24,7 @@ class SimpleRecallerProvider implements RecallerProvider
 
     public function requireUserFromRecaller(BaseIdentifier $identifier): UserSecurity
     {
+        // it serve as a basic example
         $user = $this->model->newInstance()->newQuery()
             ->where('recaller_token', $identifier->identify())
             ->first();
