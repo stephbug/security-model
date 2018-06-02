@@ -140,6 +140,8 @@ class HttpBasicAuthenticationFirewallTest extends TestCase
 
         $this->storage->expects($this->once(1))->method('getToken');
 
+        // fixMe as we tied to an email, the wrong id should not happen
+        // we need to be explicit on teh authentication request
         $wrongId = [new SomeIdentifier('foo')];
         $this->authRequest->expects($this->at(0))->method('extract')->willReturn($wrongId);
 
