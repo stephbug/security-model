@@ -23,7 +23,7 @@ class EmailToken extends Token
         $this->setUser($user);
         $this->securityKey = $securityKey;
 
-        (count($roles) > 0) and $this->setAuthenticated(true);
+        $this->hasRoles() and $this->setAuthenticated(true);
     }
 
     public function getCredentials(): Credentials

@@ -52,7 +52,6 @@ class EmailTokenTest extends TestCase
     }
 
     private $securityKey;
-    private $credentials;
     private $userToken;
 
     protected function setUp()

@@ -34,6 +34,15 @@ trait HasClock
         return null;
     }
 
+    public function stopClock(): void
+    {
+        if ($this->isClocking()) {
+            $this->clock = false;
+
+            $this->forgetAttribute(TokenAttribute::TOKEN_CLOCK_ATTRIBUTE);
+        }
+    }
+
     public function isClocking(): bool
     {
         return $this->clock;

@@ -54,10 +54,21 @@ class AnonymousTokenTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_can_be_serialized_and_unserialize(): void
+    {
+        $token = $this->token;
+
+        $serialized = serialize($token);
+
+        $this->assertEquals($token, unserialize($serialized));
+    }
+
+    /**
      * @var AnonymousToken
      */
     private $token;
-
     protected function setUp(): void
     {
         $this->token = new AnonymousToken(new AnonymousIdentifier(), new AnonymousKey('foo'));

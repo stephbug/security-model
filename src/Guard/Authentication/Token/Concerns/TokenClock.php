@@ -6,6 +6,8 @@ namespace StephBug\SecurityModel\Guard\Authentication\Token\Concerns;
 
 class TokenClock
 {
+    const DEFAULT_EXPIRATION_INTERVAL = 'PT24H';
+
     /**
      * @var \DateTimeImmutable
      */
@@ -23,16 +25,11 @@ class TokenClock
 
     public function isExpired(): bool
     {
-        $interval = $this->interval ?? new \DateInterval('PT24H');
+        if (!$this->interval instanceof \DateInterval) {
+            $this->interval = new \DateInterval(static::DEFAULT_EXPIRATION_INTERVAL);
+        }
 
-        return $this->createdAt->add($interval) < $this->fromNow();
-    }
-
-    public function setInterval(\DateInterval $interval): TokenClock
-    {
-        $this->interval = $interval;
-
-        return $this;
+        return $this->createdAt->add($this->interval) < $this->fromNow();
     }
 
     public function fromNow(): \DateTimeImmutable
@@ -43,6 +40,13 @@ class TokenClock
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function setInterval(\DateInterval $interval): TokenClock
+    {
+        $this->interval = $interval;
+
+        return $this;
     }
 
     public function getInterval(): ?\DateInterval
