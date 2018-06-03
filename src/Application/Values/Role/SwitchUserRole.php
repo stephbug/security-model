@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace StephBug\SecurityModel\Application\Values\Role;
 
+use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
 use StephBug\SecurityModel\Guard\Authentication\Token\Tokenable;
 
 class SwitchUserRole extends RoleValue
@@ -23,5 +24,12 @@ class SwitchUserRole extends RoleValue
     public function source(): Tokenable
     {
         return $this->source;
+    }
+
+    public function sameValueAs(SecurityValue $aValue): bool
+    {
+        return $aValue instanceof $this
+            && $this->getRole() === $aValue->getRole()
+            && $this->source->getIdentifier()->sameValueAs($aValue->source()->getIdentifier());
     }
 }

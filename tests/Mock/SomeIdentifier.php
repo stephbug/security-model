@@ -8,6 +8,9 @@ use StephBug\SecurityModel\Application\Values\Contract\SecurityIdentifier;
 use StephBug\SecurityModel\Application\Values\Contract\SecurityValue;
 use StephBug\SecurityModel\Application\Values\Contract\UserToken;
 
+/**
+ * @deprecated sameValueAs constructor
+ */
 class SomeIdentifier implements SecurityIdentifier, UserToken
 {
     private $id;
@@ -26,6 +29,6 @@ class SomeIdentifier implements SecurityIdentifier, UserToken
 
     public function sameValueAs(SecurityValue $aValue): bool
     {
-        return $this->sameValueAs;
+        return $aValue instanceof $this && $this->identify() === $aValue->identify();
     }
 }
